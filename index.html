@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElecPro — Electrical Engineering Learning Portal</title>
+  <meta name="description" content="A comprehensive electrical engineering learning portal covering 46 topics, 15 calculators, and 250+ quiz questions aligned to IS, NEC, and IEC standards.">
+  <meta property="og:title" content="ElecPro — Electrical Engineering Learning Portal">
+  <meta property="og:description" content="A comprehensive electrical engineering learning portal covering 46 topics, 15 calculators, and 250+ quiz questions.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/effects.css">
+</head>
+<body>
+<!-- ══════════════════════════════════════
+     EFFECTS LAYER
+     ══════════════════════════════════════ -->
+<div id="scroll-progress"></div>
+<div id="noise-overlay"></div>
+<div id="custom-cursor"></div>
+<div id="cursor-glow"></div>
+
+<div id="loader" class="hidden">Loading...</div>
+<div id="sidebar-overlay" onclick="toggleSidebar()" aria-hidden="true" class="hidden"></div>
+<!-- ══════════════════════════════════════
+     TOPBAR
+     ══════════════════════════════════════ -->
+<header id="topbar">
+
+  <!-- Hamburger (mobile) -->
+  <button class="icon-btn" onclick="toggleSidebar()" aria-label="Toggle sidebar menu">☰</button>
+
+  <!-- Logo -->
+  <a class="logo" href="#" onclick="navigateTo('home');return false">
+    <span class="logo-bolt">⚡</span>
+    ELECPRO
+  </a>
+
+  <span class="topbar-sep"></span>
+
+  <!-- Standard switcher -->
+  <div class="std-switch">
+    <button class="std-btn active" data-std="IS"  onclick="setStd('IS')">IS / NBC</button>
+    <button class="std-btn"        data-std="NEC" onclick="setStd('NEC')">NEC</button>
+    <button class="std-btn"        data-std="IEC" onclick="setStd('IEC')">IEC</button>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <span class="search-ico">🔍</span>
+    <input class="search-input" id="search-input" type="text"
+      aria-label="Search electrical topics" placeholder="Search topics, clauses, concepts…" autocomplete="off">
+    <div class="search-drop" id="search-drop"></div>
+  </div>
+
+  <!-- Module tabs -->
+  <nav class="mod-tabs" role="navigation" aria-label="Main modules">
+    <button class="mod-tab active" data-mod="learn"    onclick="setModule('learn')">Learn</button>
+    <button class="mod-tab"        data-mod="calc"     onclick="setModule('calc')">Calculate</button>
+    <button class="mod-tab"        data-mod="quiz"     onclick="setModule('quiz')">Quiz</button>
+    <button class="mod-tab"        data-mod="practice" onclick="setModule('practice')">Practice</button>
+  </nav>
+
+  <span class="topbar-spacer"></span>
+
+  <!-- Theme toggle -->
+  <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">☀️</button>
+
+</header>
+
+<!-- ══════════════════════════════════════
+     SIDEBAR
+     ══════════════════════════════════════ -->
+<nav id="sidebar">
+  <div id="sidebar-nav"><!-- Built by app.js --></div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+     ══════════════════════════════════════ -->
+<main id="main">
+
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <canvas id="hero-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+    <div id="home-content"></div>
+  </div>
+
+  <!-- LEARN -->
+  <div id="page-learn" class="page">
+    <div id="learn-content"></div>
+  </div>
+
+  <!-- TOPIC DETAIL -->
+  <div id="page-topic" class="page">
+    <div id="topic-content"></div>
+  </div>
+
+  <!-- CALCULATORS -->
+  <div id="page-calc" class="page">
+    <div id="calc-content"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="page-quiz" class="page">
+    <div id="quiz-content"></div>
+  </div>
+
+  <!-- PRACTICE MODE -->
+  <div id="page-practice" class="page">
+    <div id="practice-content"></div>
+  </div>
+
+  <!-- REFERENCE TABLES -->
+  <div id="page-ref" class="page">
+    <div id="ref-content"></div>
+  </div>
+
+  <!-- DESIGN THINKING PROJECTS -->
+  <div id="page-projects" class="page">
+    <div id="projects-content"></div>
+  </div>
+
+  <!-- MISTAKES DATABASE -->
+  <div id="page-mistakes" class="page">
+    <div id="mistakes-content"></div>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════════════
+     SCRIPTS — order matters
+     ══════════════════════════════════════ -->
+<!-- Core data -->
+<script src="js/data_core.js"></script>
+<!-- Topic data (split by level for performance) -->
+<script src="js/topics_L1.js"></script>
+<script src="js/topics_L2.js"></script>
+<script src="js/topics_L3.js"></script>
+<script src="js/topics_L4.js"></script>
+<!-- Quiz bank -->
+<script src="js/quiz_bank.js"></script>
+<!-- SVG diagrams -->
+<script src="js/svgs.js"></script>
+<!-- Calculators -->
+<script src="js/calculators.js"></script>
+<!-- App engine -->
+<script src="js/app.js?v=3.2"></script>
+
+<!-- ══════════════════════════════════════
+     LIBRARIES (CDN)
+     ══════════════════════════════════════ -->
+<!-- GSAP Animation Engine -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" crossorigin="anonymous"></script>
+<!-- ══════════════════════════════════════
+     EFFECTS & ANIMATIONS
+     ══════════════════════════════════════ -->
+<script defer src="js/effects.js?v=3.2"></script>
+<script defer src="js/animations.js?v=3.2"></script>
+
+</body>
+</html>
