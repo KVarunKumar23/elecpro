@@ -1,4 +1,6 @@
-# ⚡ ElecPro v4 — Electrical Engineering Learning Portal
+# ⚡ ElecPro v5 — Electrical Engineering Learning Portal
+
+**Author:** K Varun Kumar
 
 A comprehensive, offline-capable electrical design learning platform covering beginner-to-advanced concepts with interactive calculators, 3D diagrams, and multi-standard compliance across Indian (IS/NBC), American (NEC/IEEE), and International (IEC) codes.
 
@@ -93,7 +95,7 @@ Add a `CNAME` file with your domain, then configure DNS A/CNAME records.
 ## 📁 File Structure
 
 ```
-elecpro-v4/
+elecpro-v5/
 ├── index.html                 ← Single entry point (SPA shell)
 ├── README.md
 ├── css/
@@ -137,6 +139,7 @@ elecpro-v4/
 - **🎮 3D Diagrams** — Interactive Three.js visualisations for select topics
 - **🧮 14 Calculators** — Formula shown first, then inputs, then step-by-step result
 - **❌ Mistakes Database** — Real-world design errors with explanations
+- **🏗️ Design Thinking Projects** — End-to-end engineering workflow simulations
 - **💡 Site Reality Tips** — Field experience notes from practising engineers
 - **🎓 Interview Prep** — Common interview questions per topic
 
@@ -151,19 +154,19 @@ Single-Page Application (SPA)
 ├── Hash-based routing (#home, #learn, #topic:cable-sizing, #calc)
 ├── Dynamic rendering from JS data objects
 ├── Global state: standard (IS/NEC/IEC), theme (dark/light), sector filter
-└── Lazy-loaded Three.js for 3D diagrams (CDN)
+└── 100% Offline execution — all dependencies (Three.js, GSAP) bundled locally
 ```
 
 ---
 
-## 🔄 Recent Updates (v4.2)
+## 🔄 Recent Updates (v5.0)
 
 - ✅ Updated IEC 60439 → **IEC 61439** (current standard)
 - ✅ Search intent map expanded from 12 → **55 entries**
 - ✅ Added **7 new full-depth topics**: Grounding Types, SPD, Fire Alarm, Metering CT, Cable Pull, HV Earthing, Capacitor Bank
-- ✅ Created **14 new SVG diagrams** (116 total, 0 missing references)
-- ✅ All topics include IS, NEC, and IEC formulas with worked examples
-- ✅ Sector-specific notes for Industrial, Oil & Gas, Data Centre, Healthcare, and Commercial
+- ✅ Migrated to **100% offline-first architecture** (local GSAP, Three.js, Fonts)
+- ✅ Deployed **Design Thinking Projects** & **Mistakes Database** modules
+- ✅ Implemented **Dynamic Sector Tracking** and lightning-fast **CSS Standards Isolation** (IS/NEC/IEC)
 
 ---
 

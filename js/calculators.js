@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════
    ElecPro — calculators.js
    All calculators: formula-first → inputs → result
    Standard-aware: reads window.STATE.std
@@ -553,19 +553,20 @@ function calcEV() {
   const mdDCFC = nDCFC * kwDCFC * dfDCFC;
   const mdKW   = mdL1 + mdL2 + mdDCFC;
   const mdKVA  = mdKW / pf;
-  const iInc   = mdKVA * 1000 / (Math.sqrt(3) * 415);
+  const defV   = getStd() === 'NEC' ? 480 : 415;
+  const iInc   = mdKVA * 1000 / (Math.sqrt(3) * defV);
   const stdRef = {IS:'IS 17017 / CEA 2019', NEC:'NEC Art.625 (125% continuous)', IEC:'IEC 61851'};
 
   calcResult('ev-result',
     mdKVA.toFixed(1), 'kVA (Maximum Demand)',
-    `${(nL1+nL2+nDCFC)} chargers | EV supply incomer: ${iInc.toFixed(0)}A at 415V 3-phase | ${stdRef[getStd()]}`,
+    `${(nL1+nL2+nDCFC)} chargers | EV supply incomer: ${iInc.toFixed(0)}A at ${defV}V 3-phase | ${stdRef[getStd()]}`,
     [
       nL1 > 0   ? `Level 1 (${nL1} × ${kwL1}kW × DF${dfL1}): ${mdL1.toFixed(1)} kW` : '',
       nL2 > 0   ? `Level 2 (${nL2} × ${kwL2}kW × DF${dfL2}): ${mdL2.toFixed(1)} kW` : '',
       nDCFC > 0 ? `DC Fast (${nDCFC} × ${kwDCFC}kW × DF${dfDCFC}): ${mdDCFC.toFixed(1)} kW` : '',
       `Total EV MD: ${mdKW.toFixed(1)} kW`,
       `MD (kVA) = ${mdKW.toFixed(1)} / ${pf} = ${mdKVA.toFixed(1)} kVA`,
-      `Incomer current: ${mdKVA.toFixed(1)} × 1000 / (√3 × 415) = ${iInc.toFixed(0)}A`,
+      `Incomer current: ${mdKVA.toFixed(1)} × 1000 / (√3 × ${defV}) = ${iInc.toFixed(0)}A`,
       `Select MCCB: ${Math.ceil(iInc/25)*25}A (next standard above ${iInc.toFixed(0)}A)`,
     ].filter(Boolean),
     `Install smart charging controller to limit total EV demand — can reduce MD by 30–50% and avoid supply upgrade. Specify OCPP 1.6+ compliance on all chargers.`
@@ -610,7 +611,7 @@ function calcLighting() {
       `N = ${(lux*area).toFixed(0)} / ${(lumens*uf*mf).toFixed(1)} = ${(lux*area/(lumens*uf*mf)).toFixed(2)} → round up to ${N} fixtures`,
       `Achieved illuminance: (${N} × ${lumens} × ${uf} × ${mf}) / ${area} = ${achLux.toFixed(0)} lux`,
       `LPD = (${N} × ${watts}W) / ${area} m² = ${lpd.toFixed(2)} W/m²`,
-      `NBC 2016 LPD limit (office): ${lpdLim} W/m² → ${lpd<=lpdLim?'✓ Compliant':'✗ Non-compliant — select lower wattage fixture'}`,
+      `${stdRef[getStd()]} LPD limit (office): ${lpdLim} W/m² → ${lpd<=lpdLim?'✓ Compliant':'✗ Non-compliant — select lower wattage fixture'}`,
     ],
     `Verify uniformity ratio Emin/Eavg ≥ 0.60. Max fixture spacing ≤ 1.5 × mounting height (${(hm*1.5).toFixed(1)}m). Run DIALux simulation for final layout.`
   );
@@ -630,7 +631,8 @@ function calcTransformer() {
   const reqKVA  = mdKVA * gf / lf;
   const sizes   = [100,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500];
   const sel     = sizes.find(s => s >= reqKVA) || sizes[sizes.length-1];
-  const flc     = sel * 1000 / (Math.sqrt(3) * 415);
+  const defV    = getStd() === 'NEC' ? 480 : 415;
+  const flc     = sel * 1000 / (Math.sqrt(3) * defV);
   const isc     = flc / (z / 100);
   const loading = mdKVA / sel * 100;
   const stdFault= [16,25,36,50,65,80,100].find(r => r*1000 >= isc) || 100;
@@ -643,7 +645,7 @@ function calcTransformer() {
       `Required kVA = MD × GF / LF = ${mdKVA} × ${gf} / ${lf} = ${reqKVA.toFixed(1)} kVA`,
       `Selected standard size: ${sel} kVA`,
       `Loading at MD: ${mdKVA}/${sel} = ${loading.toFixed(1)}% ${loading<=80?'✓ (≤80%)':'⚠ (>80% — consider next size)'}`,
-      `FLC at 415V: ${sel},000 / (√3 × 415) = ${flc.toFixed(0)} A`,
+      `FLC at ${defV}V: ${sel},000 / (√3 × ${defV}) = ${flc.toFixed(0)} A`,
       `Isc at LV bus: ${flc.toFixed(0)} / ${z/100} = ${isc.toFixed(0)} A = ${(isc/1000).toFixed(1)} kA`,
       `LV switchboard fault rating required: ≥ ${stdFault} kA (next standard above ${(isc/1000).toFixed(1)} kA)`,
     ],
@@ -807,6 +809,7 @@ function calcShortCircuit() {
 function renderCalcPageFull() {
   const std = getStd();
   const stdLabel = stdName();
+  const defV = std === 'NEC' ? 480 : 415;
 
   const calcPageHTML = `
     <div class="page-hdr">
@@ -821,9 +824,9 @@ function renderCalcPageFull() {
     <div class="slabel">Level 2 — Core Design</div>
     ${calcCard('lc','⚡','Load Calculation — Maximum Demand',std==='IS'?'NBC 2016 Part 8':std==='NEC'?'NEC Art.220':'IEC 60364-1',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">MD(kVA) = Σ(Pi × DFi) / PF</div>`,`<div class="form-row-calc">${inputField('lc-light-kw','Lighting kW','kW',20)}${inputField('lc-light-df','Lighting DF','—',1.0,0.1,0,1)}</div><div class="form-row-calc">${inputField('lc-power-kw','Power sockets kW','kW',15)}${inputField('lc-power-df','Power DF','—',0.5,0.05,0,1)}</div><div class="form-row-calc">${inputField('lc-hvac-kw','HVAC kW','kW',50)}${inputField('lc-hvac-df','HVAC DF','—',0.75,0.05,0,1)}</div><div class="form-row-calc">${inputField('lc-motor-kw','Motors kW','kW',0)}${inputField('lc-motor-df','Motor DF','—',0.7,0.05,0,1)}</div><div class="form-row-calc">${inputField('lc-misc-kw','Misc kW','kW',5)}${inputField('lc-pf','Power factor','—',0.87,0.01,0.5,1)}</div>`,'calcLoad()')}
 
-    ${calcCard('cab','🔗','Cable Sizing — Current & VD',std==='IS'?'IS 3961':std==='NEC'?'NEC Art.310':'IEC 60364-5-52',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">Check 1: Iz × CF ≥ Ib &nbsp;|&nbsp; Check 2: VD% ≤ ${std==='IEC'?'4':'5'}%</div>`,`<div class="form-row-calc">${selectField('cab-phases','System','',{'3':'3-phase','1':'1-phase'})}${inputField('cab-voltage','Voltage','V',415)}</div><div class="form-row-calc">${inputField('cab-current','Design current Ib','A',45)}${inputField('cab-length','Length','m',80)}</div><div class="form-row-calc">${selectField('cab-size','Size mm²','',{1.5:1.5,2.5:2.5,4:4,6:6,10:10,16:16,25:25,35:35,50:50,70:70,95:95,120:120,150:150,185:185,240:240,300:300},'10')}${selectField('cab-insul','Insulation','',{xlpe:'XLPE (90°C)',pvc:'PVC (70°C)'})}</div><div class="form-row-calc">${selectField('cab-temp','Ambient temp','°C',{25:25,30:30,35:35,40:40,45:45,50:50},'30')}${selectField('cab-group','Cables grouped','',{1:'1 (no grouping)',2:2,3:3,4:4,5:5,6:'6+'},'1')}</div>`,'calcCable()')}
+    ${calcCard('cab','🔗','Cable Sizing — Current & VD',std==='IS'?'IS 3961':std==='NEC'?'NEC Art.310':'IEC 60364-5-52',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">Check 1: Iz × CF ≥ Ib &nbsp;|&nbsp; Check 2: VD% ≤ ${std==='IEC'?'4':'5'}%</div>`,`<div class="form-row-calc">${selectField('cab-phases','System','',{'3':'3-phase','1':'1-phase'})}${inputField('cab-voltage','Voltage','V',defV)}</div><div class="form-row-calc">${inputField('cab-current','Design current Ib','A',45)}${inputField('cab-length','Length','m',80)}</div><div class="form-row-calc">${selectField('cab-size','Size mm²','',{1.5:1.5,2.5:2.5,4:4,6:6,10:10,16:16,25:25,35:35,50:50,70:70,95:95,120:120,150:150,185:185,240:240,300:300},'10')}${selectField('cab-insul','Insulation','',{xlpe:'XLPE (90°C)',pvc:'PVC (70°C)'})}</div><div class="form-row-calc">${selectField('cab-temp','Ambient temp','°C',{25:25,30:30,35:35,40:40,45:45,50:50},'30')}${selectField('cab-group','Cables grouped','',{1:'1 (no grouping)',2:2,3:3,4:4,5:5,6:'6+'},'1')}</div>`,'calcCable()')}
 
-    ${calcCard('vd','📉','Voltage Drop',std==='IS'?'IS 732 Cl.6':std==='NEC'?'NEC 210.19(A)':'IEC 60364-5-52',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">VD = √3 × I × L × (R·cosφ + X·sinφ) / 1000 (3-ph) &nbsp;|&nbsp; Limit: ${std==='IEC'?'4':'5'}%</div>`,`<div class="form-row-calc">${selectField('vd-phases','System','',{'3':'3-phase','1':'1-phase'})}${inputField('vd-voltage','Voltage','V',415)}</div><div class="form-row-calc">${inputField('vd-current','Current','A',45)}${inputField('vd-length','Length','m',80)}</div><div class="form-row-calc">${inputField('vd-r','Resistance R','Ω/km',1.83,0.001)}${inputField('vd-x','Reactance X','Ω/km',0.08,0.001)}</div><div class="form-row-calc">${inputField('vd-pf','Power factor','—',0.87,0.01,0.5,1)}${selectField('vd-type','Circuit type','',{power:'Power',lighting:'Lighting'})}</div>`,'calcVD()')}
+    ${calcCard('vd','📉','Voltage Drop',std==='IS'?'IS 732 Cl.6':std==='NEC'?'NEC 210.19(A)':'IEC 60364-5-52',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">VD = √3 × I × L × (R·cosφ + X·sinφ) / 1000 (3-ph) &nbsp;|&nbsp; Limit: ${std==='IEC'?'4':'5'}%</div>`,`<div class="form-row-calc">${selectField('vd-phases','System','',{'3':'3-phase','1':'1-phase'})}${inputField('vd-voltage','Voltage','V',defV)}</div><div class="form-row-calc">${inputField('vd-current','Current','A',45)}${inputField('vd-length','Length','m',80)}</div><div class="form-row-calc">${inputField('vd-r','Resistance R','Ω/km',1.83,0.001)}${inputField('vd-x','Reactance X','Ω/km',0.08,0.001)}</div><div class="form-row-calc">${inputField('vd-pf','Power factor','—',0.87,0.01,0.5,1)}${selectField('vd-type','Circuit type','',{power:'Power',lighting:'Lighting'})}</div>`,'calcVD()')}
 
     ${calcCard('earth','🌍','Earthing Electrode',std==='IS'?'IS 3043 Cl.8.5':std==='NEC'?'NEC 250.56':'IEC 60364-5-54',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">R = ρ/(2πL) × [ln(4L/d) − 1] &nbsp;|&nbsp; Limit: ${std==='NEC'?'25':'5'}Ω</div>`,`<div class="form-row-calc">${inputField('earth-rho','Soil resistivity ρ','Ω·m',100,1)}${inputField('earth-len','Electrode length L','m',3,0.5,0.5)}</div><div class="form-row-calc">${inputField('earth-dia','Diameter d','m',0.025,0.001,0.01)}${inputField('earth-n','No. of electrodes','—',1,1,1,50)}</div>`,'calcEarthing()')}
 
@@ -839,7 +842,7 @@ function renderCalcPageFull() {
 
     ${calcCard('lit','💡','Lighting Design — Lumen Method',std==='IS'?'NBC 2016 / ECBC':std==='NEC'?'ASHRAE 90.1':'EN 12464-1',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">N = (E × A) / (F × UF × MF) &nbsp;|&nbsp; k = (L × W) / [Hm × (L + W)]</div>`,`<div class="form-row-calc">${inputField('lit-l','Room length L','m',10)}${inputField('lit-w','Room width W','m',8)}</div><div class="form-row-calc">${inputField('lit-hc','Ceiling height','m',3.0,0.1)}${inputField('lit-hw','Working plane height','m',0.8,0.1)}</div><div class="form-row-calc">${inputField('lit-lux','Required illuminance E','lux',500,50)}${inputField('lit-lm','Fixture lumens F','lm',4000,100)}</div><div class="form-row-calc">${inputField('lit-w2','Fixture wattage','W',36,1)}${inputField('lit-uf','Utilisation factor UF','—',0.65,0.01,0.3,1)}</div><div class="form-row-calc">${inputField('lit-mf','Maintenance factor MF','—',0.80,0.01,0.5,1)}</div>`,'calcLighting()')}
 
-    ${calcCard('mot','⚙️','Motor FLC & Starting',std==='IS'?'IS 325 / IS 13947-4':std==='NEC'?'NEC Art.430':'IEC 60034 / IEC 60947-4',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">FLC = P / (√3 × V × PF × η) &nbsp;|&nbsp; Star-delta Istart = DOL/3</div>`,`<div class="form-row-calc">${inputField('mot-kw','Motor power','kW',37)}${inputField('mot-v','Voltage','V',415)}</div><div class="form-row-calc">${inputField('mot-pf','Power factor','—',0.86,0.01,0.5,1)}${inputField('mot-eff','Efficiency η','—',0.93,0.01,0.5,1)}</div><div class="form-row-calc">${selectField('mot-method','Starting method','',{dol:'DOL',sd:'Star-Delta',ss:'Soft Starter',vfd:'VFD'})}${inputField('mot-inrush','DOL inrush factor','× FLC',6.5,0.5,3,10)}</div>`,'calcMotor()')}
+    ${calcCard('mot','⚙️','Motor FLC & Starting',std==='IS'?'IS 325 / IS 13947-4':std==='NEC'?'NEC Art.430':'IEC 60034 / IEC 60947-4',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">FLC = P / (√3 × V × PF × η) &nbsp;|&nbsp; Star-delta Istart = DOL/3</div>`,`<div class="form-row-calc">${inputField('mot-kw','Motor power','kW',37)}${inputField('mot-v','Voltage','V',defV)}</div><div class="form-row-calc">${inputField('mot-pf','Power factor','—',0.86,0.01,0.5,1)}${inputField('mot-eff','Efficiency η','—',0.93,0.01,0.5,1)}</div><div class="form-row-calc">${selectField('mot-method','Starting method','',{dol:'DOL',sd:'Star-Delta',ss:'Soft Starter',vfd:'VFD'})}${inputField('mot-inrush','DOL inrush factor','× FLC',6.5,0.5,3,10)}</div>`,'calcMotor()')}
 
     ${calcCard('ev','🚗','EV Charging Demand',std==='IS'?'IS 17017':std==='NEC'?'NEC Art.625':'IEC 61851',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">MD(kVA) = Σ(charger kW × DF) / PF</div>`,`<div class="form-row-calc">${inputField('ev-n2','Level 2 chargers (qty)','',20,1,0)}${inputField('ev-kw2','Level 2 kW each','kW',7.4,0.5)}</div><div class="form-row-calc">${inputField('ev-ndcfc','DC Fast Chargers (qty)','',4,1,0)}${inputField('ev-kwdcfc','DCFC kW each','kW',50,10)}</div><div class="form-row-calc">${inputField('ev-df2','Level 2 DF','—',0.45,0.05,0,1)}${inputField('ev-dfdcfc','DCFC DF','—',0.80,0.05,0,1)}</div><div class="form-row-calc">${inputField('ev-n1','Level 1 chargers','',0,1,0)}${inputField('ev-pf','Power factor','—',0.97,0.01)}</div>`,'calcEV()')}
 
@@ -853,7 +856,7 @@ function renderCalcPageFull() {
 
     ${calcCard('bess','⚡','Battery Storage Sizing',std==='IS'?'IEC 62619':std==='NEC'?'NFPA 855':'IEC 62619',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">Capacity = req_kWh / DoD / Eff</div>`,`<div class="form-row-calc">${inputField('bess-kwh','Required Energy','kWh',100)}${inputField('bess-dod','Depth of Discharge','%',80)}</div><div class="form-row-calc">${inputField('bess-eff','Efficiency','%',95)}${inputField('bess-v','System Voltage','V',48)}</div>`,'calcBatteryStorage()')}
 
-    ${calcCard('isc','💥','Short Circuit Current (Isc)',std==='IS'?'IS 13234':std==='NEC'?'IEEE 141':'IEC 60909',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">Isc = FLC / (Z%) + Motor_Contribution</div>`,`<div class="form-row-calc">${inputField('isc-kva','Transformer','kVA',1000)}${inputField('isc-v','LV Voltage','V',415)}</div><div class="form-row-calc">${inputField('isc-z','Impedance Z','%',5.0,0.5)}${inputField('isc-mkva','Connected Motors','kVA',200)}</div>`,'calcShortCircuit()')}
+    ${calcCard('isc','💥','Short Circuit Current (Isc)',std==='IS'?'IS 13234':std==='NEC'?'IEEE 141':'IEC 60909',`<div style="font-family:var(--font-mono);font-size:.78rem;color:var(--accent2);line-height:1.8;background:var(--bg3);border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin-bottom:14px">Isc = FLC / (Z%) + Motor_Contribution</div>`,`<div class="form-row-calc">${inputField('isc-kva','Transformer','kVA',1000)}${inputField('isc-v','LV Voltage','V',defV)}</div><div class="form-row-calc">${inputField('isc-z','Impedance Z','%',5.0,0.5)}${inputField('isc-mkva','Connected Motors','kVA',200)}</div>`,'calcShortCircuit()')}
 
   `;
 

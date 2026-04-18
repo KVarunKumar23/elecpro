@@ -590,7 +590,7 @@
     if (!window.VanillaTilt) {
       if (window.loadScript) {
         try {
-          await window.loadScript('https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js');
+          await window.loadScript('js/vanilla-tilt.min.js');
         } catch (e) { return; }
       } else return;
     }
@@ -696,7 +696,7 @@
       // Lazy load Three.js for Hero
       try {
         if (window.loadScript) {
-          await window.loadScript('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js');
+          await window.loadScript('js/three.min.js');
         } else {
           initParticleCanvas();
           return;

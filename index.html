@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ElecPro — Electrical Engineering Learning Portal</title>
-  <meta name="description" content="A comprehensive electrical engineering learning portal covering 46 topics, 15 calculators, and 250+ quiz questions aligned to IS, NEC, and IEC standards.">
+  <meta name="author" content="K Varun Kumar">
+  <meta name="description" content="A comprehensive electrical engineering learning portal covering 58 topics, 14 calculators, and 1000+ quiz questions aligned to IS, NEC, and IEC standards.">
   <meta property="og:title" content="ElecPro — Electrical Engineering Learning Portal">
-  <meta property="og:description" content="A comprehensive electrical engineering learning portal covering 46 topics, 15 calculators, and 250+ quiz questions.">
+  <meta property="og:description" content="A comprehensive electrical engineering learning portal by K Varun Kumar.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/effects.css">
 </head>
@@ -129,6 +130,13 @@
 </main>
 
 <!-- ══════════════════════════════════════
+     GLOBAL FOOTER
+     ══════════════════════════════════════ -->
+<footer id="global-footer" style="padding: 24px; text-align: center; color: var(--text3); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 40px; background: var(--bg2);">
+  <p style="margin: 0; font-family: var(--font-mono);">Engineered & Built by <strong style="color: var(--accent);">K Varun Kumar</strong> | &copy; 2026 ElecPro</p>
+</footer>
+
+<!-- ══════════════════════════════════════
      SCRIPTS — order matters
      ══════════════════════════════════════ -->
 <!-- Core data -->
@@ -144,15 +152,18 @@
 <script src="js/svgs.js"></script>
 <!-- Calculators -->
 <script src="js/calculators.js"></script>
+<!-- New Modules Data -->
+<script src="js/data_mistakes.js"></script>
+<script src="js/data_projects.js"></script>
 <!-- App engine -->
 <script src="js/app.js?v=3.2"></script>
 
 <!-- ══════════════════════════════════════
-     LIBRARIES (CDN)
+     LIBRARIES (LOCAL — 100% offline)
      ══════════════════════════════════════ -->
-<!-- GSAP Animation Engine -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" crossorigin="anonymous"></script>
+<!-- GSAP Animation Engine (local) -->
+<script src="js/gsap.min.js"></script>
+<script defer src="js/ScrollTrigger.min.js"></script>
 <!-- ══════════════════════════════════════
      EFFECTS & ANIMATIONS
      ══════════════════════════════════════ -->

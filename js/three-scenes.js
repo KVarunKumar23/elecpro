@@ -57,36 +57,49 @@
     // Simple manual orbit (no OrbitControls dependency)
     let isDragging = false;
     let prevX = 0, prevY = 0;
-    let rotX = 0.3, rotY = -0.5;
+    let rotX = 0.2, rotY = 0; // Flat and centered by default
     let targetRotX = rotX, targetRotY = rotY;
 
-    domElement.addEventListener('mousedown', e => {
+    function handleStart(e) {
       isDragging = true;
-      prevX = e.clientX;
-      prevY = e.clientY;
+      const t = e.touches ? e.touches[0] : e;
+      prevX = t.clientX;
+      prevY = t.clientY;
       domElement.style.cursor = 'grabbing';
-    });
+    }
 
-    domElement.addEventListener('mousemove', e => {
+    function handleMove(e) {
       if (!isDragging) return;
-      targetRotY += (e.clientX - prevX) * 0.008;
-      targetRotX += (e.clientY - prevY) * 0.008;
+      if (e.touches && e.touches.length > 1) return; // Allow pinch zooming (browser default)
+      if (e.cancelable && e.touches) e.preventDefault(); // Prevent scrolling while rotating 3D model
+      const t = e.touches ? e.touches[0] : e;
+      targetRotY += (t.clientX - prevX) * 0.008;
+      targetRotX += (t.clientY - prevY) * 0.008;
       targetRotX = Math.max(-Math.PI/3, Math.min(Math.PI/3, targetRotX));
-      prevX = e.clientX;
-      prevY = e.clientY;
-    });
+      prevX = t.clientX;
+      prevY = t.clientY;
+    }
 
-    domElement.addEventListener('mouseup', () => {
+    function handleEnd() {
       isDragging = false;
       domElement.style.cursor = 'grab';
-    });
+    }
 
-    domElement.addEventListener('mouseleave', () => {
-      isDragging = false;
-      domElement.style.cursor = 'grab';
-    });
+    // Mouse events
+    domElement.addEventListener('mousedown', handleStart);
+    domElement.addEventListener('mousemove', handleMove, { passive: false });
+    domElement.addEventListener('mouseup', handleEnd);
+    domElement.addEventListener('mouseleave', handleEnd);
+
+    // Touch events
+    domElement.addEventListener('touchstart', handleStart, { passive: true });
+    domElement.addEventListener('touchmove', handleMove, { passive: false });
+    domElement.addEventListener('touchend', handleEnd);
 
     domElement.style.cursor = 'grab';
+    // Prevent default touch actions like pan-y if we want to handle orbit
+    // domElement.style.touchAction = 'none'; // Optional: but usually good for 3D canvases so they don't scroll the page
+    domElement.style.touchAction = 'pan-y'; // Allow vertical scroll, but capture horizontal for orbit
 
     return {
       update(pivot) {
@@ -96,8 +109,8 @@
         pivot.rotation.y = rotY;
       },
       reset() {
-        targetRotX = 0.3;
-        targetRotY = -0.5;
+        targetRotX = 0.2;
+        targetRotY = 0;
       }
     };
   }

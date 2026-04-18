@@ -13,6 +13,7 @@ const STATE = {
   topicId: null,
   searchQuery: ''
 };
+window.STATE = STATE;
 
 // ── DYNAMIC ASSET LOADER ──
 const LOADED_SCRIPTS = new Set();
@@ -53,6 +54,13 @@ window.loadScript = loadScript;
 
 // All topics combined
 let ALL_TOPICS = [];
+
+function getTopicSectors(t) {
+  if (!t) return [];
+  const s = t.sectors ? [...t.sectors] : [];
+  if (t.green && !s.includes('grn')) s.push('grn');
+  return s;
+}
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
@@ -141,6 +149,7 @@ function toggleTheme() {
 // ── STANDARD SWITCHER ──
 function setStd(s, save = true) {
   STATE.std = s;
+  document.body.setAttribute('data-std', s);
   document.querySelectorAll('.std-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.std === s));
   // Update terminology in topbar/pills
@@ -407,9 +416,24 @@ function renderHome() {
 }
 
 function sectorCard(s) {
-  const steps = s.path.slice(0, 5).map(p =>
-    `<span class="step" data-term="${p}" onclick="event.stopPropagation();navigateTo('learn','${p}')">${p}</span>`).join('');
-  const more  = s.path.length > 5 ? `<span class="step" onclick="event.stopPropagation();navigateTo('learn','${s.id}')">+${s.path.length - 5} more</span>` : '';
+  const allTopics = [
+    ...(window.TOPICS_L1 || []),
+    ...(window.TOPICS_L2 || []),
+    ...(window.TOPICS_L3 || []),
+    ...(window.TOPICS_L4 || [])
+  ];
+
+  const sTopics = allTopics.filter(t => getTopicSectors(t).includes(s.id));
+  const tCount = sTopics.length > 0 ? sTopics.length : (s.topicCount || 0);
+  const displayNames = sTopics.length > 0 ? sTopics.map(t => t.title) : (s.path || []);
+
+  const steps = displayNames.slice(0, 5).map(p => {
+    const escP = p.replace(/'/g, "\\'");
+    return `<span class="step" data-term="${p.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();navigateTo('learn','${escP}')">${p}</span>`;
+  }).join('');
+  
+  const more = displayNames.length > 5 ? `<span class="step" onclick="event.stopPropagation();navigateTo('learn','${s.id}')">+${displayNames.length - 5} more</span>` : '';
+  
   return `
     <div class="sc ${s.id}" onclick="navigateTo('learn','${s.id}')">
       <div class="sc-head">
@@ -423,7 +447,7 @@ function sectorCard(s) {
         <div class="sc-path">${steps}${more}</div>
       </div>
       <div class="sc-foot">
-        <span class="sc-count">${s.topicCount} topics</span>
+        <span class="sc-count">${tCount} topics</span>
         <button class="sc-cta" onclick="event.stopPropagation();navigateTo('learn','${s.id}')">Start →</button>
       </div>
     </div>`;
@@ -448,7 +472,7 @@ function renderLearn(filter = null) {
       filterLabel = `Sector: ${sector.name}`;
       levels = levels.map(lv => ({
         ...lv,
-        topics: lv.topics.filter(t => t.sectors && t.sectors.includes(filter))
+        topics: lv.topics.filter(t => getTopicSectors(t).includes(filter))
       }));
     } else {
       // Treat as keyword search
@@ -506,7 +530,7 @@ function renderLearn(filter = null) {
 }
 
 function topicRow(t) {
-  const sectorTags = (t.sectors || []).slice(0, 3).map(s =>
+  const sectorTags = getTopicSectors(t).slice(0, 3).map(s =>
     `<span class="tag ${s}">${s.toUpperCase()}</span>`).join('');
   const greenTag = t.green ? `<span class="tag grn">🌿 Green</span>` : '';
   return `
@@ -579,7 +603,7 @@ function renderTopic(id) {
       <button id="tab-adv" class="btn btn-outline btn-sm" onclick="setDiffTab('adv')">Advanced</button>
       <span style="flex:1"></span>
       <span style="font-family:var(--font-mono);font-size:.7rem;color:var(--text3);align-self:center">
-        ${(t.sectors || []).map(s => `<span class="tag ${s}" style="margin:2px">${window.SECTORS[s]?.name || s}</span>`).join('')}
+        ${getTopicSectors(t).map(s => `<span class="tag ${s}" style="margin:2px">${window.SECTORS[s]?.name || s}</span>`).join('')}
         ${t.green ? '<span class="tag grn" style="margin:2px">🌿 Green</span>' : ''}
       </span>
     </div>
@@ -664,18 +688,27 @@ function topicContentPlaceholder(t, mode, std) {
     </div>` : '';
 
   // ── Theory text ──
+  let currentWrapClass = '';
   const theoryHtml = data.theory ? data.theory.split('\n\n').map(para => {
     if (!para.trim()) return '';
+    
+    if (para.startsWith('[NEC]')) { currentWrapClass = 'show-nec'; para = para.substring(5).trim(); }
+    else if (para.startsWith('[IS]')) { currentWrapClass = 'show-is'; para = para.substring(4).trim(); }
+    else if (para.startsWith('[IEC]')) { currentWrapClass = 'show-iec'; para = para.substring(5).trim(); }
+    else if (para.startsWith('[ALL]')) { currentWrapClass = ''; para = para.substring(5).trim(); }
+
+    let wrapClass = currentWrapClass;
+
     if (para.includes('\n')) {
       const lines = para.split('\n');
       const title = lines[0];
       const rest  = lines.slice(1).join('\n');
       if (title === title.toUpperCase() && title.length < 60 && !title.includes('=')) {
-        return `<h3 style="font-family:var(--font-head);font-size:.95rem;font-weight:600;color:var(--text);margin:14px 0 6px;letter-spacing:.03em">${title}</h3><p style="font-size:.85rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin:0 0 8px">${rest}</p>`;
+        return `<div class="${wrapClass}"><h3 style="font-family:var(--font-head);font-size:.95rem;font-weight:600;color:var(--text);margin:14px 0 6px;letter-spacing:.03em">${title}</h3><p style="font-size:.85rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin:0 0 8px">${rest}</p></div>`;
       }
-      return `<p style="font-size:.85rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin:0 0 10px">${para}</p>`;
+      return `<p class="${wrapClass}" style="font-size:.85rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;margin:0 0 10px">${para}</p>`;
     }
-    return `<p style="font-size:.85rem;color:var(--text2);line-height:1.7;margin:0 0 10px">${para}</p>`;
+    return `<p class="${wrapClass}" style="font-size:.85rem;color:var(--text2);line-height:1.7;margin:0 0 10px">${para}</p>`;
   }).join('') : `<div style="color:var(--text3);font-family:var(--font-mono);font-size:.82rem">Theory content is under active development.</div>`;
 
   // ── Sector note ──
@@ -774,7 +807,7 @@ function topicContentPlaceholder(t, mode, std) {
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px">
           <div class="slabel" style="margin-bottom:10px">Applies to</div>
           <div style="display:flex;flex-wrap:wrap;gap:5px">
-            ${(t.sectors || []).map(s => `<span class="tag ${s}">${window.SECTORS[s]?.name || s}</span>`).join('')}
+            ${getTopicSectors(t).map(s => `<span class="tag ${s}">${window.SECTORS[s]?.name || s}</span>`).join('')}
             ${t.green ? '<span class="tag grn">🌿 Green</span>' : ''}
           </div>
         </div>
@@ -923,7 +956,7 @@ async function setViewTab(tab, mode) {
 
         try {
           if (!window.THREE) {
-            await loadScript('https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js');
+            await loadScript('js/three.min.js');
           }
           if (!window.ElecScenes) {
             await loadScript('js/three-scenes.js?v=3.2');
@@ -1391,6 +1424,7 @@ const PROJECTS_DB = [
 ];
 
 function renderProjects() {
+  const stdName = window.STANDARDS?.[STATE.std]?.name || STATE.std;
   document.getElementById('projects-content').innerHTML = `
     <div class="page-hdr">
       <div class="ph-left">
@@ -1398,51 +1432,41 @@ function renderProjects() {
         <h1 class="page-title">🧠 Design Thinking</h1>
         <p class="page-desc">Guided multi-step real-world projects. Select a project to walk through the entire electrical design workflow.</p>
       </div>
+      <span class="std-pill">${stdName}</span>
     </div>
     <div id="project-view-container">
       <div class="card-grid">
-        ${PROJECTS_DB.map(p => `
+        ${(window.PROJECT_WORKFLOWS || []).map(p => `
           <div class="card c-acc" style="cursor:pointer; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'" onclick="openProject('${p.id}')">
-            <div class="card-icon">${p.icon}</div>
-            <div class="card-title">${p.name}</div>
-            <div class="card-desc">${p.steps}</div>
+            <div class="card-icon">${p.cover}</div>
+            <div class="card-title">${p.title}</div>
+            <div class="card-desc">${p.description}</div>
             <div class="card-meta">
-              <span style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3)">${p.sector}</span>
+              <span style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3)">${p.steps.length} Steps</span>
               <span class="btn btn-sm btn-primary" style="margin-left:auto;font-family:var(--font-head);font-size:.78rem;font-weight:600;">Start Guide →</span>
             </div>
           </div>`).join('')}
-          <div class="card c-acc" style="opacity:0.6;">
-            <div class="card-icon">🏥</div>
-            <div class="card-title">Hospital Emergency Block</div>
-            <div class="card-desc">Load calc → Essential power → DG + UPS</div>
-            <div class="card-meta"><span style="font-size:.78rem">Coming Soon</span></div>
-          </div>
-          <div class="card c-acc" style="opacity:0.6;">
-            <div class="card-icon">⛽</div>
-            <div class="card-title">Petrol Station (Ex)</div>
-            <div class="card-desc">Hazardous area → Ex equipment → Earthing</div>
-            <div class="card-meta"><span style="font-size:.78rem">Coming Soon</span></div>
-          </div>
       </div>
     </div>`;
 }
 
 window.openProject = function(id) {
-  const p = PROJECTS_DB.find(x => x.id === id);
+  const p = (window.PROJECT_WORKFLOWS || []).find(x => x.id === id);
   if(!p) return;
   
-  const stepsHtml = p.details.map((d, i) => `
+  const stepsHtml = p.steps.map((d, i) => `
     <div style="background:var(--bg3); border-left:3px solid var(--accent); padding:20px; border-radius:6px; margin-bottom:16px;">
-      <h3 style="margin-top:0; color:var(--text); font-size:1.1rem; font-weight:600;">${d.title}</h3>
-      <p style="margin-bottom:0; color:var(--text2); line-height:1.6;">${d.text}</p>
+      <h3 style="margin-top:0; color:var(--text); font-size:1.1rem; font-weight:600;">Step ${d.stepNum}: ${d.title}</h3>
+      <p style="margin-bottom:15px; color:var(--text2); line-height:1.6;">${d.desc}</p>
+      ${d.actionBtn ? `<button class="btn btn-sm btn-outline" onclick="${d.actionFn}">${d.actionBtn}</button>` : ''}
     </div>
   `).join('');
 
   document.getElementById('project-view-container').innerHTML = `
     <div style="margin-bottom:24px;">
       <button class="btn btn-outline" onclick="renderProjects()" style="margin-bottom:16px;">← Back to Projects</button>
-      <h2 style="font-size:1.8rem; margin:0 0 8px 0; color:var(--text);">${p.icon} ${p.name}</h2>
-      <p style="color:var(--text3); font-family:var(--font-mono); font-size:0.85rem; margin:0;">SECTOR: ${p.sector.toUpperCase()} | WORKFLOW: ${p.steps}</p>
+      <h2 style="font-size:1.8rem; margin:0 0 8px 0; color:var(--text);">${p.cover} ${p.title}</h2>
+      <p style="color:var(--text3); font-family:var(--font-mono); font-size:0.85rem; margin:0;">TOTAL STEPS: ${p.steps.length}</p>
     </div>
     <div style="max-width:800px;">
       ${stepsHtml}
@@ -1456,33 +1480,39 @@ window.openProject = function(id) {
 
 
 function renderMistakes() {
-  const allTopics = [...(window.TOPICS_L1||[]), ...(window.TOPICS_L2||[]), ...(window.TOPICS_L3||[]), ...(window.TOPICS_L4||[])];
-  let mistakeList = [];
-  allTopics.forEach(t => {
-    if(t.beginner && t.beginner.mistakes) {
-      t.beginner.mistakes.forEach(m => mistakeList.push({topic: t.title, text: m, level: 'Beginner', std: t.standards ? 'multi' : ''}));
-    }
-    if(t.advanced && t.advanced.mistakes) {
-      t.advanced.mistakes.forEach(m => mistakeList.push({topic: t.title, text: m, level: 'Advanced', std: t.standards ? 'multi' : ''}));
-    }
-  });
+  const stdName = window.STANDARDS?.[STATE.std]?.name || STATE.std;
+  const db = window.MISTAKE_DB || [];
 
-  const cardsHtml = mistakeList.map(m => `
-    <div style="background:var(--bg3); border-left:4px solid #e74c3c; padding:16px; margin-bottom:12px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
-      <div style="font-size:0.75rem; color:var(--text3); font-weight:bold; text-transform:uppercase; margin-bottom:6px;">${m.topic} <span style="float:right; color:var(--accent); font-weight:normal;">${m.level}</span></div>
-      <div style="font-size:0.9rem; color:var(--text2);">${m.text}</div>
+  const cardsHtml = db.map(m => `
+    <div class="card mistake-card" style="background:var(--bg3); border-left:4px solid var(--red); padding:20px; margin-bottom:16px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span style="font-size:0.75rem; color:var(--text3); font-family:var(--font-mono); font-weight:bold; letter-spacing:0.05em;">${m.category.toUpperCase()}</span>
+        <span style="font-size:0.75rem; color:var(--red); font-family:var(--font-mono); font-weight:bold;">${m.severity.toUpperCase()}</span>
+      </div>
+      <h3 style="margin-top:0; margin-bottom:12px; color:var(--text); font-size:1.25rem;">${m.title}</h3>
+      <div style="display:flex; gap:20px; border-top:1px solid var(--border); padding-top:16px;">
+        <div style="flex:1;">
+          <h4 style="margin:0 0 8px 0; color:var(--red); font-size:0.9rem;">The Pitfall ❌</h4>
+          <div style="color:var(--text2); font-size:0.95rem; line-height:1.5;">${m.pitfall}</div>
+        </div>
+        <div style="flex:1; background:var(--bg2); padding:16px; border-radius:6px; border-left:2px solid var(--accent)">
+          <h4 style="margin:0 0 8px 0; color:var(--accent); font-size:0.9rem;">The Remedy ✅</h4>
+          <div style="color:var(--text2); font-size:0.95rem; line-height:1.5;">${m.remedy}</div>
+        </div>
+      </div>
     </div>
   `).join('');
 
   document.getElementById('mistakes-content').innerHTML = `
     <div class="page-hdr">
       <div class="ph-left">
-        <div class="eyebrow">Special Mode</div>
+        <div class="eyebrow">Real World Engineering</div>
         <h1 class="page-title">⚠️ Mistakes Database</h1>
-        <p class="page-desc">Top mistakes engineers make compiled from all blueprint topics. ${mistakeList.length} mistakes loaded.</p>
+        <p class="page-desc">Common design faults and regulatory violations. Adapting references dynamically for ${stdName}.</p>
       </div>
+      <span class="std-pill">${stdName}</span>
     </div>
-    <div style="margin-top:20px; max-width:800px;">
+    <div style="margin-top:20px; max-width:960px;">
       ${cardsHtml || '<div style="color:var(--text3)">No mistakes documented yet.</div>'}
     </div>`;
 }
@@ -1600,8 +1630,9 @@ function searchTopics(q) {
     
     // Check sectors
     let matchesSector = false;
-    if (t.sectors) {
-      matchesSector = t.sectors.some(sId => {
+    const tSects = getTopicSectors(t);
+    if (tSects.length > 0) {
+      matchesSector = tSects.some(sId => {
         const s = window.SECTORS?.[sId];
         return sId.toLowerCase() === q || (s && s.name.toLowerCase() === q);
       });
@@ -1627,7 +1658,7 @@ function renderSearchResults(results, q, drop) {
         <span class="s-icon">${t.icon}</span>
         <div>
           <div class="s-title">${t.title}</div>
-          <div class="s-meta">${levelLabel[t.level]} · ${(t.sectors||[]).map(s=>window.SECTORS[s]?.name||s).join(', ')}</div>
+          <div class="s-meta">${levelLabel[t.level]} · ${getTopicSectors(t).map(s=>window.SECTORS[s]?.name||s).join(', ')}</div>
         </div>
       </div>`).join('') : `<div class="s-item"><span class="s-icon">🔍</span><div class="s-title" style="color:var(--text3)">No topics found for "${q}"</div></div>`}
 

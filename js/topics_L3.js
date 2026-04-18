@@ -119,7 +119,7 @@ const TOPICS_L3 = [
         {icon:'⚡', text:'Undersized DG causes voltage dip and frequency instability — loads trip off'},
         {icon:'🔧', text:'DG running below 30% rated load wet stacks — unburnt fuel damages the engine'}
       ],
-      theory:"SIZING STEPS:\n1. List essential loads (cannot be shed on grid failure)\n2. Calculate essential load MD (kW and kVA)\n3. Add transient kVA for largest motor start\n4. Apply altitude and temperature derating\n5. Add 15–25% spare capacity\n6. Select nearest standard kVA size\n\nDERATING FACTORS:\nAltitude: 1% capacity loss per 100m above 1000m\nTemperature: 1% loss per 5.5°C above 40°C ambient\n\nMOTOR STARTING IMPACT:\nDOL transient kVA = 3 × motor kW / PF\nStar-delta transient kVA = 1 × motor kW / PF (lower demand)\nSoft starter / VFD: minimal transient demand\n\nWET STACKING PREVENTION:\nMinimum continuous loading ≥ 30% of rated kW\nIf essential loads are light: add dummy load bank, or split across smaller DGs\n\nAMF (Automatic Mains Failure) PANEL:\nDetects mains failure → starts DG → changeover → on mains return, transfers back\nIS 10000 Class 10: reaches full load within 10 seconds",
+      theory:"SIZING STEPS:\n1. List essential loads (cannot be shed on grid failure)\n2. Calculate essential load MD (kW and kVA)\n3. Add transient kVA for largest motor start\n4. Apply altitude and temperature derating\n5. Add 15–25% spare capacity\n6. Select nearest standard kVA size\n\nDERATING FACTORS:\nAltitude: 1% capacity loss per 100m above 1000m\nTemperature: 1% loss per 5.5°C above 40°C ambient\n\nMOTOR STARTING IMPACT:\nDOL transient kVA = 3 × motor kW / PF\nStar-delta transient kVA = 1 × motor kW / PF (lower demand)\nSoft starter / VFD: minimal transient demand\n\nWET STACKING PREVENTION:\nMinimum continuous loading ≥ 30% of rated kW\nIf essential loads are light: add dummy load bank, or split across smaller DGs\n\n[IS]\nAMF (Automatic Mains Failure) PANEL:\nDetects mains failure → starts DG → changeover → on mains return, transfers back.\nIS 10000 Class 10: reaches full load within 10 seconds.\n\n[NEC]\nATS (Automatic Transfer Switch) & GENERATOR:\nDetects grid failure → starts generator → transfers load.\nEmergency Systems (Life Safety): Must restore power within 10 seconds (NEC 700.12).\nLegally Required Standby: Must restore within 60 seconds (NEC 701.12).\n\n[IEC]\nATS / AMF PANEL:\nDetects grid failure → starts DG → changeover → transfers back on grid return.\nISO 8528 / IEC 60364-5-56: Critical life safety loads typically require power restoration within 0.5 to 10 seconds depending on the asset.",
       formula:{
         IS:'G(kVA) = [MD(kW)/PF + Motor_start_kVA] / (alt_df × temp_df) × SF\nAlt derating: 1 − (altitude−1000)/100 × 0.01 for alt > 1000m\nTemp derating: 1 − (T−40)/5.5 × 0.01 for T > 40°C\nIS 10000: Class 10, 30, 60 classification',
         NEC:'NFPA 110: emergency and standby power\nClass 10: full load within 10 seconds\nG(kW) = essential load kW × 1.25 minimum',
@@ -144,6 +144,19 @@ const TOPICS_L3 = [
       mistakes:["Including all building loads as essential — only life-safety loads. Oversizing causes wet stacking.","Not accounting for starting kVA of largest motor — DG bogs down on start","Forgetting derating for high altitude/temperature sites"],
       interviewQs:["What is wet stacking and how do you prevent it?","How does altitude affect DG capacity?","What is Class 10 emergency power classification?"],
       siteTips:["Run monthly load tests at ≥75% rated load for 30 minutes. Record: kW, voltage, frequency, fuel consumption. Trends reveal problems before failure."],
+      table:{
+        all:{
+          title:"Emergency System Categorization",
+          desc:"Classification of emergency power systems per NEC and IS standards.",
+          columns:["Category", "Standard Ref.", "Transfer Time", "Typical Loads"],
+          data:[
+            ["Life Safety (Emergency)", "NEC 700 / IS 10000 Cl.10", "≤ 10 seconds", "Egress lighting, fire pumps, alarms"],
+            ["Legally Required Standby", "NEC 701", "≤ 60 seconds", "Smoke control, select elevators"],
+            ["Optional Standby", "NEC 702", "No strict limit", "Servers, commercial operations"],
+            ["Class 30 / 60", "IS 10000", "30s / 60s", "Industrial standby processes"]
+          ]
+        }
+      },
       diagram:{type:'sld', svgId:'dg-sld'}
     },
     advanced:{
@@ -265,7 +278,7 @@ const TOPICS_L3 = [
         {icon:'💚', text:'LPD compliance is mandatory for green building certificates (LEED, IGBC, ECBC)'},
         {icon:'💡', text:'Wrong fixture layout creates glare hotspots and dark corners — both fail the design'}
       ],
-      theory:"THE LUMEN METHOD:\nN = (E × A) / (F × UF × MF)\nN = number of fixtures\nE = required illuminance (lux)\nA = room area (m²)\nF = luminous flux per fixture (lumens)\nUF = utilisation factor\nMF = maintenance factor (accounts for lumen depreciation)\n\nROOM INDEX:\nk = (L × W) / [Hm × (L + W)]\nHm = mounting height above working plane\nTypical UF: 0.45–0.80 (from manufacturer's polar curve tables)\n\nMAINTENANCE FACTOR (MF):\nTypical LED: 0.70–0.85\nAccounts for: lamp lumen depreciation, dirt on fixture, room surface dirt\n\nLUX LEVELS (EN 12464 / NBC 2016):\nCorridor: 100 lux\nOffice: 300–500 lux\nCAD/Drawing: 750 lux\nHospital ward: 300 lux\nOperating theatre: 1000 lux ambient\n\nLPD LIMITS (NBC 2016):\nOffice: 10 W/m². Retail: 15 W/m². Hospital: 12 W/m²",
+      theory:"THE LUMEN METHOD:\nN = (E × A) / (F × UF × MF)\nN = number of fixtures\nE = required illuminance\nA = room area\nF = luminous flux per fixture (lumens)\nUF = utilisation factor\nMF = maintenance factor (accounts for lumen depreciation)\n\nROOM INDEX:\nk = (L × W) / [Hm × (L + W)]\nHm = mounting height above working plane\nTypical UF: 0.45–0.80 (from manufacturer's polar curve tables)\n\nMAINTENANCE FACTOR (MF):\nTypical LED: 0.70–0.85\nAccounts for: lamp lumen depreciation, dirt on fixture, room surface dirt\n\n[IS]\nLUX LEVELS (NBC 2016):\nCorridor: 100 lux\nOffice: 300–500 lux\nCAD/Drawing: 750 lux\nHospital ward: 300 lux\nOperating theatre: 1000 lux ambient\n\nLPD LIMITS (NBC 2016):\nOffice: 10 W/m². Retail: 15 W/m². Hospital: 12 W/m²\n\n[NEC]\nILLUMINANCE LEVELS (IESNA):\nCorridor: 10-20 fc\nOffice: 30-50 fc\nCAD/Drawing: 75 fc\nHospital ward: 30 fc\nOperating theatre: 100 fc ambient\n\nLPD LIMITS (ASHRAE 90.1):\nOffice: 0.82 W/sq ft. Retail: 1.06 W/sq ft. Hospital: 1.05 W/sq ft\n\n[IEC]\nLUX LEVELS (EN 12464-1):\nCorridor: 100 lux\nOffice: 300–500 lux\nCAD/Drawing: 750 lux\nHospital ward: 300 lux\nOperating theatre: 1000 lux ambient\n\nLPD LIMITS (EN 15193):\nOffice: 10 W/m². Retail: 15 W/m². Hospital: 12 W/m²",
       formula:{
         IS:'N = (E × A) / (F × UF × MF)\nk = (L × W) / [Hm × (L + W)]\nLPD = (N × W_fixture) / A\nNBC 2016: LPD limits by space type',
         NEC:'N = (FC × A) / (LL × CU × LLF)\nFC = footcandles (1 fc = 10.764 lux)\nCU = coefficient of utilisation\nASHRAE 90.1: LPD limits in W/sq ft',
@@ -288,10 +301,24 @@ const TOPICS_L3 = [
       mistakes:["Selecting UF without calculating Room Index first","Using initial lumens instead of maintained lumens — LED loses 10–20% over life","Placing fixtures only in room centre — check uniformity ratio ≥ 0.60"],
       interviewQs:["What is Room Index and how does it affect UF?","Why is MF always less than 1.0?","What is LPD and which standard limits it for Indian offices?"],
       siteTips:["Measure illuminance at 25 grid points during commissioning. Average must meet target. Variation >20% between min and max = poor uniformity — adjust fixture positions."],
+      table:{
+        all:{
+          title:"Lamp Types & Luminaire Guide",
+          desc:"Comparison of common lighting technologies and their applications.",
+          columns:["Lamp / Luminaire Type", "Efficacy (lm/W)", "Life (Hrs)", "Typical Application"],
+          data:[
+            ["LED", "100–150+", "50,000+", "Standard for all new installations (high efficiency, long life)"],
+            ["Fluorescent (T8/T5)", "70–100", "20,000", "Legacy general lighting, being phased out"],
+            ["Metal Halide (HID)", "70–115", "15,000", "Legacy high-bay / sports lighting"],
+            ["Recessed Troffer", "N/A", "N/A", "Office grids for low glare (UGR<19)"],
+            ["High-Bay Luminaire", "N/A", "N/A", "Factories and warehouses (height > 6m)"]
+          ]
+        }
+      },
       diagram:{type:'schematic', svgId:'lighting-diagram'}
     },
     advanced:{
-      theory:"UNIFORMITY:\nUniformity ratio = Emin/Eavg ≥ 0.60 (offices per EN 12464)\nMax spacing: S_max = 1.5 × Hm for most LED panels\n\nGLARE (UGR):\nUGR < 19 for offices. UGR < 22 for industrial.\nLow-glare: diffused optics, louvres, recessed.\n\nDALI CONTROL:\nDigital Addressable Lighting Interface: dims each fixture independently.\nOccupancy + daylight sensors: save 20–40% energy.\nEN 15193: LENI calculation methodology.\n\nEMERGENCY LIGHTING:\nMaintained ≥ 1 lux at floor level on escape routes (IS 1646, NFPA 101)\nDuration: ≥ 3 hours. Self-contained or central battery system.",
+      theory:"UNIFORMITY:\nUniformity ratio = Emin/Eavg ≥ 0.60\nMax spacing: S_max = 1.5 × Hm for most LED panels\n\nGLARE (UGR):\nUGR < 19 for offices. UGR < 22 for industrial.\nLow-glare: diffused optics, louvres, recessed.\n\nDALI CONTROL:\nDigital Addressable Lighting Interface: dims each fixture independently.\nOccupancy + daylight sensors: save 20–40% energy.\n\n[IS]\nSTANDARDS & EMERGENCY:\nEmergency: Maintained ≥ 1 lux at floor level on escape routes (IS 1646).\nDuration: ≥ 3 hours. Self-contained or central battery system.\nUniformity: Office Emin/Eavg ≥ 0.60 (NBC 2016).\n\n[NEC]\nSTANDARDS & EMERGENCY:\nEmergency: Average 1.0 fc, minimum 0.1 fc along escape routes (NFPA 101).\nDuration: Minimum 90 minutes (NEC 700.12).\nEnergy: Lighting power calculation methodology (ASHRAE 90.1).\n\n[IEC]\nSTANDARDS & EMERGENCY:\nUniformity: Office Emin/Eavg ≥ 0.60 (EN 12464-1).\nEnergy: LENI (Lighting Energy Numeric Indicator) calculation methodology (EN 15193).\nEmergency: Maintained ≥ 1 lux at floor level on escape routes (BS 5266 / IEC 60598-2-22).",
       formula:{
         IS:'UGR = 8 log(0.25/Eb × ΣLω/p²)\nUniformity: Emin/Eavg ≥ 0.60\nEmergency: ≥ 1 lux floor level\nDALI per IEC 62386',
         NEC:'ASHRAE 90.1: LPD limits by occupancy\nNEC Art.700: emergency lighting\nNFPA 101: ≥ 1 fc on escape route floor',
@@ -361,6 +388,19 @@ const TOPICS_L3 = [
       mistakes:["Setting OLR at nameplate current, not actual FLC — motor drawing less than nameplate trips on normal load","Using star-delta for high starting torque loads — 33% torque insufficient to start"],
       interviewQs:["Why does star-delta reduce starting current to 1/3 of DOL?","What starting method for a positive displacement compressor?","How does a VFD limit starting current vs DOL?"],
       siteTips:["If star-delta causes mechanical shock at star-to-delta transition, the motor hasn't reached speed. Increase star time or switch to soft starter."],
+      table:{
+        all:{
+          title:"Motor Starter Comparison",
+          desc:"Comparison of starting methods for 3-phase induction motors.",
+          columns:["Starting Method", "Starting Current", "Starting Torque", "Applications"],
+          data:[
+            ["Direct-On-Line (DOL)", "5–8 × FLC", "100–200%", "Small motors (≤7.5 kW), fire pumps"],
+            ["Star-Delta", "1.5–2.5 × FLC", "33%", "Centrifugal pumps, fans (low torque needed)"],
+            ["Soft Starter", "2–3 × FLC", "Adjustable", "High inertia loads, compressors"],
+            ["VFD / Inverter", "1–1.5 × FLC", "Up to 100%", "Speed control, HVAC fans/pumps"]
+          ]
+        }
+      },
       diagram:{type:'schematic', svgId:'motor-starting-diagram'}
     },
     advanced:{
@@ -636,7 +676,7 @@ const TOPICS_L3 = [
         {icon:'⚖️', text:'Overloaded cable trays collapse — catastrophic failure in cable shafts'},
         {icon:'📋', text:'Tray fill is a code requirement — inspectors check it on commissioning'}
       ],
-      theory:"TRAY TYPES:\nLadder: rungs across side rails. Best ventilation. Standard for power cables.\nPerforated: solid base with holes. Good for mixed use.\nSolid bottom: no holes. Best for data/signal. Most heat retention.\nWire basket: lightweight mesh. IT environments.\n\nFILL LIMITS:\nLadder (power): single layer, fill depth ≤ 50mm or 1 cable diameter from tray top\nSolid bottom (signal): fill ≤ 50% cross-section area\nPerforated (mixed): fill ≤ 40% cross-section area\n\nWIDTH SELECTION:\nArrange cables side by side (single layer for ladder).\nSum of cable ODs = minimum tray width required.\nSelect next standard: 50, 75, 100, 150, 200, 300, 450, 600mm\n\nSUPPORT SPACING:\nSteel: 1.5m max. Aluminium: 1.2m. Wire basket: 0.9m.\nAt bends: support within 300mm of start and end.",
+      theory:"TRAY TYPES:\nLadder: rungs across side rails. Best ventilation. Standard for power cables.\nPerforated: solid base with holes. Good for mixed use.\nSolid bottom: no holes. Best for data/signal. Most heat retention.\nWire basket: lightweight mesh. IT environments.\n\nFILL LIMITS:\nLadder (power): single layer, fill depth ≤ [[50mm|2 in.]] or 1 cable diameter from tray top\nSolid bottom (signal): fill ≤ 50% cross-section area\nPerforated (mixed): fill ≤ 40% cross-section area\n\nWIDTH SELECTION:\nArrange cables side by side (single layer for ladder).\nSum of cable ODs = minimum tray width required.\nSelect next standard: [[50, 75, 100, 150, 200, 300, 450, 600mm|2\", 3\", 4\", 6\", 9\", 12\", 18\", 24\"]]\n\nSUPPORT SPACING:\nSteel: [[1.5m max|5 ft max]]. Aluminium: [[1.2m|4 ft]]. Wire basket: [[0.9m|3 ft]].\nAt bends: support within [[300mm|12\"]] of start and end.",
       formula:{
         IS:'Fill% = Σ(π×OD²/4) / tray cross-section × 100\nSingle layer: Σ(OD) ≤ tray width\nWeight: Σ(cable kg/m) × span = load per support\nIEC 61537 (adopted): fill and load capacity',
         NEC:'NEC 392.22: single layer fill for ladder tray\nNEC 392.22(A): cable count limits\nNEC 310.15(B)(3): adjustment factors for cable trays',
@@ -644,19 +684,19 @@ const TOPICS_L3 = [
       },
       example:{
         sector:'ind',
-        given:'30 cables: 10×35mm² (OD=28mm), 15×16mm² (OD=22mm), 5×10mm² (OD=17mm). Ladder tray.',
+        given:'30 cables: [[10×35mm² (OD=28mm), 15×16mm² (OD=22mm), 5×10mm² (OD=17mm)|10× #2 AWG (OD=1.1"), 15× #6 AWG (OD=0.87"), 5× #8 AWG (OD=0.67")]]. Ladder tray.',
         steps:[
           'Single layer — arrange side by side:',
-          '10×28 = 280mm + 15×22 = 330mm + 5×17 = 85mm = 695mm total width',
-          'Select 750mm wide tray (next standard above 695mm)',
-          'Depth check: largest cable OD=28mm < 75mm tray depth ✓',
-          'Weight per metre: (10×2.8 + 15×1.8 + 5×1.2) kg/m = 61 kg/m',
-          'Weight per 1.5m span: 61 × 1.5 = 91.5 kg',
-          'Verify tray load rating ≥ 91.5 kg at 1.5m span'
+          '[[10×28 = 280mm + 15×22 = 330mm + 5×17 = 85mm = 695mm total width|10×1.1\" = 11\" + 15×0.87\" = 13.05\" + 5×0.67\" = 3.35\" = 27.4\" total width]]',
+          '[[Select 750mm wide tray (next standard above 695mm)|Select 30\" wide tray (next standard above 27.4\")]]',
+          '[[Depth check: largest cable OD=28mm < 75mm tray depth ✓|Depth check: largest cable OD=1.1\" < 3\" tray depth ✓]]',
+          '[[Weight per metre: (10×2.8 + 15×1.8 + 5×1.2) kg/m = 61 kg/m|Weight per foot: (10×1.9 + 15×1.2 + 5×0.8) lb/ft = 41 lb/ft]]',
+          '[[Weight per 1.5m span: 61 × 1.5 = 91.5 kg|Weight per 5ft span: 41 × 5 = 205 lb]]',
+          '[[Verify tray load rating ≥ 91.5 kg at 1.5m span|Verify tray load rating ≥ 205 lb at 5ft span]]'
         ],
-        result:'750mm wide × 75mm deep ladder tray. Single layer. Verify tray load rating ≥ 91.5 kg at 1.5m span.'
+        result:'[[750mm wide × 75mm deep ladder tray|30\" wide × 3\" deep ladder tray]]. Single layer. [[Verify tray load rating ≥ 91.5 kg at 1.5m span.|Verify tray load rating ≥ 205 lb at 5ft span.]]'
       },
-      rot:["Always leave 25% spare tray space at design. A 750mm tray designed to 550mm effective width leaves room without replacing the tray when new cables are added.","Ladder tray = single layer always. Never stack cables. That is what solid-bottom or perforated tray is for."],
+      rot:["Always leave 25% spare tray space at design. A [[750mm tray designed to 550mm|30\" tray designed to 22\"]] effective width leaves room without replacing the tray when new cables are added.","Ladder tray = single layer always. Never stack cables. That is what solid-bottom or perforated tray is for."],
       mistakes:["Multiple cable layers in ladder tray — bottom cables overheat. Ladder tray = single layer only.","Not checking weight capacity — 30 large cables on 1.5m span easily exceeds tray load rating"],
       interviewQs:["Why does solid-bottom tray have lower fill percentage than ladder?","How do you determine maximum support spacing?","Why is grouping derating more severe for many cables in one tray?"],
       siteTips:["Walk all tray routes before cable pulling: check no obstructions at junctions, bends have correct radius, supports at correct spacing, earthing clips fitted. Fixing these after cables are pulled is very difficult."],
@@ -784,7 +824,7 @@ const TOPICS_L3 = [
         {icon:'⚡', text:'Multiple DC fast chargers simultaneously can overload a supply if not managed'},
         {icon:'💚', text:'EV charging is a key sustainability metric for LEED, IGBC, and green building certification'}
       ],
-      theory:"CHARGER TYPES:\n\nLevel 1 (AC slow): 3.3–3.7 kW, single-phase. Standard 16A socket. 8–12 hours for 50 kWh.\n\nLevel 2 (AC fast): 7.4–22 kW, single or 3-phase. Dedicated EVSE. 2–4 hours for 50 kWh.\n\nDC Fast Charger (DCFC): 50–350 kW DC output. 20–60 minutes for 50 kWh.\n\nSIMULTANEOUS DEMAND:\nNot all chargers run at full power simultaneously.\nResidential: diversity factor 0.3–0.5 (residents charge at different times)\nCommercial parking: 0.4–0.6 (staggered parking durations)\nHigh-power DCFC: 0.7–0.9 (designed for simultaneous use)\n\nSUPPLY REQUIREMENTS:\nDedicated circuit per charger\nDCFC: typically 3-phase 415V, 63A–400A per charger\nLevel 2: single-phase 230V 32A or 3-phase 415V 16–32A\n\nIS 17017: Indian EV supply equipment standard\nIEC 61851: EV conductive charging system\nNEC Art.625: Electric vehicle charging system",
+      theory:"CHARGER TYPES:\n\nLevel 1 (AC slow): 3.3–3.7 kW, single-phase. [[Standard 16A socket|Standard 15A/20A socket (NEMA 5-15/5-20)]]. 8–12 hours for 50 kWh.\n\nLevel 2 (AC fast): 7.4–22 kW, single or 3-phase. Dedicated EVSE. 2–4 hours for 50 kWh.\n\nDC Fast Charger (DCFC): 50–350 kW DC output. 20–60 minutes for 50 kWh.\n\nSIMULTANEOUS DEMAND:\nNot all chargers run at full power simultaneously.\nResidential: diversity factor 0.3–0.5 (residents charge at different times)\nCommercial parking: 0.4–0.6 (staggered parking durations)\nHigh-power DCFC: 0.7–0.9 (designed for simultaneous use)\n\nSUPPLY REQUIREMENTS:\nDedicated circuit per charger\nDCFC: typically 3-phase [[415V, 63A–400A|480V, 100A–400A]] per charger\nLevel 2: single-phase [[230V 32A|208V/240V 32A–80A]] or 3-phase [[415V 16–32A|208V 16–32A]]\n\n[[IS 17017 / IEC 61851: EV supply equipment standard|NEC Art.625: Electric vehicle charging system]]",
       formula:{
         IS:'MD (kW) = Σ(charger rating × DF)\nMD (kVA) = MD(kW) / PF\nIS 17017: conductive charging for EVs\nICEV (India): BESCOM/state utility EV charging guidelines',
         NEC:'NEC 625.14: EV circuit sizing = 125% of max output\nNEC 625.42: EV supply circuit — 2-pole or 3-pole\nTotal load: each EVSE rated as continuous load',
@@ -883,6 +923,19 @@ const TOPICS_L3 = [
       mistakes:["Using metering class CT for protection — CT saturates at fault current, relay doesn't see full fault current, protection fails to operate","Connecting too many relays and meters to one CT — total burden exceeds VA rating, accuracy degrades"],
       interviewQs:["What is the difference between Cl.0.5 and Cl.5P20 CT accuracy class?","Why must protection CTs have a high knee-point voltage?","What happens if CT burden exceeds its rated VA?"],
       siteTips:["Measure CT secondary burden with a burden tester at commissioning — include actual lead resistance. Calculated burden is often 20–30% different from measured. Adjust if total exceeds CT rating."],
+      table:{
+        all:{
+          title:"Substation Clearances",
+          desc:"Standard clearances for MV substations based on IS / IE Rules.",
+          columns:["Voltage Level", "Phase to Earth", "Phase to Phase", "Working Clearance"],
+          data:[
+            ["LV (up to 415V)", "15–25 mm", "25 mm", "1.0m (in front of panel)"],
+            ["MV (11 kV)", "140 mm", "140 mm", "2.6m (bare conductor to ground)"],
+            ["MV (33 kV)", "320 mm", "320 mm", "2.8m (bare conductor to ground)"],
+            ["HV (66 kV)", "630 mm", "630 mm", "3.0m (bare conductor to ground)"]
+          ]
+        }
+      },
       diagram:{type:'schematic', svgId:'ct-pt-diagram'}
     },
     advanced:{
@@ -1215,6 +1268,19 @@ const TOPICS_L3 = [
       mistakes:["Installing Type 3 SPD only at equipment without Type 2 at the panel — residual energy after Type 3 is too high","Using SPD with Uc < system voltage — SPD will overheat and fail during normal operation","Forgetting to replace SPD after it has operated (indicator shows red/fault) — a spent SPD provides zero protection"],
       interviewQs:["What is the difference between Type 1 and Type 2 SPD?","Why is 10m minimum distance needed between Type 1 and Type 2?","What does Uc rating mean and how do you select it?"],
       siteTips:["After any lightning event, physically check all SPD status indicators. A spent Type 2 SPD with a red indicator is invisible protection loss — the system looks normal but the next surge will damage equipment directly."],
+      table:{
+        all:{
+          title:"Surge Protection Device (SPD) Types",
+          desc:"Classification and installation locations for SPDs.",
+          columns:["SPD Type", "Test Waveform", "Key Rating", "Installation Location"],
+          data:[
+            ["Type 1 (Class I)", "10/350 μs (High Energy)", "Iimp: 12.5–25 kA", "Main Distribution Board (MDB)"],
+            ["Type 2 (Class II)", "8/20 μs (Fast Transient)", "In: 5–20 kA", "Sub-Distribution Boards (SMDB)"],
+            ["Type 3 (Class III)", "1.2/50 μs (Voltage drop)", "Uoc: 1.5–6 kV", "Near sensitive final electronic equipment"],
+            ["Type 1+2 Combined", "Combines Both", "Iimp + In", "MDB when distance to sub-panel <10m"]
+          ]
+        }
+      },
       diagram:{type:'schematic',svgId:'spd-diagram'}
     },
     advanced:{
@@ -1265,7 +1331,7 @@ const TOPICS_L3 = [
     beginner:{
       intro:"Fire alarm systems are life safety systems — their electrical design requires dedicated circuits, fire-rated cables, and battery backup. The electrical engineer is responsible for power supply, cable routing, and integration with other building systems.",
       whyMatters:[{icon:'🔥',text:'Fire alarm failure = lives lost. Electrical design must ensure 100% reliability — no single point of failure'},{icon:'🔋',text:'Battery backup must sustain the system for 24-72 hours standby + 30 minutes alarm — undersized batteries are a code violation'},{icon:'📐',text:'Cable type, routing, and voltage drop are critical — wrong cable type loses fire rating, excessive VD causes false alarms'}],
-      theory:"SYSTEM TYPES:\nConventional: zones with multiple detectors on shared circuits. Panel identifies zone, not individual detector.\nAddressable: each detector has unique address. Panel identifies exact device. Preferred for commercial/industrial.\nAnalog-addressable: provides sensitivity levels, pre-alarm warnings, drift compensation.\n\nCIRCUIT TYPES:\nSLC (Signaling Line Circuit): data loop connecting addressable detectors. Class A (monitored, redundant path) or Class B (single path).\nNAC (Notification Appliance Circuit): powers sounders, beacons, strobes.\nIDC (Initiating Device Circuit): connects conventional detectors and manual call points.\n\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration (30min, 60min, 120min).\nIS: FR-LSH (Fire Resistant, Low Smoke Halogen-free) per IS 694.\nNEC: FPLR (riser) or FPLP (plenum) per NEC Art.760.\nIEC: PH30, PH60, PH120 rating per IEC 60331.\n\nPOWER SUPPLY:\n24V DC from FACP (Fire Alarm Control Panel).\nDual mains supply (essential circuit) + battery backup.\nBattery: 24h standby + 30min alarm (NFPA 72) or 72h standby + 30min alarm (some codes).\n\nVOLTAGE DROP:\nEnd-of-line VD must not cause device dropout. Typical limit: 10% of 24V = 2.4V max.\nFor NAC circuits: calculate current draw of all sounders/strobes on circuit.",
+      theory:"SYSTEM TYPES:\nConventional: zones with multiple detectors on shared circuits. Panel identifies zone, not individual detector.\nAddressable: each detector has unique address. Panel identifies exact device. Preferred for commercial/industrial.\nAnalog-addressable: provides sensitivity levels, pre-alarm warnings, drift compensation.\n\nCIRCUIT TYPES:\nSLC (Signaling Line Circuit): data loop connecting addressable detectors. Class A (monitored, redundant path) or Class B (single path).\nNAC (Notification Appliance Circuit): powers sounders, beacons, strobes.\nIDC (Initiating Device Circuit): connects conventional detectors and manual call points.\n\n[IS]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nIS 694 / IS 1554: FR-LSH (Fire Resistant, Low Smoke Halogen-free) or equivalent standard cables.\n\nPOWER SUPPLY:\n24V DC from FACP (Fire Alarm Control Panel).\nDual mains supply (essential circuit) + battery backup.\nBattery: typically 48h standby + 30min alarm per NBC/IS requirements.\n\n[NEC]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nNEC Art.760: FPL (General purpose), FPLR (Riser), or FPLP (Plenum) cables based on routing.\n\nPOWER SUPPLY:\n24V DC from FACP.\nDual mains supply (essential circuit) + battery backup.\nBattery: 24h standby + 5min alarm (general) or 15min alarm (voice evac) per NFPA 72.\n\n[IEC]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nIEC 60331 / BS 5839: PH30, PH60, PH120 ratings depending on required survivability time.\n\nPOWER SUPPLY:\n24V DC from FACP.\nDual mains supply + battery backup.\nBattery: 72h standby + 30min alarm, or 24h+30min if generator backup present (BS 5839/EN 54).\n\nVOLTAGE DROP:\nEnd-of-line VD must not cause device dropout. Typical limit: 10% of 24V = 2.4V max.\nFor NAC circuits: calculate current draw of all sounders/strobes on circuit.",
       formula:{IS:'IS 2189 Cl.7: power supply requirements\nBattery Ah = (standby current × 24h) + (alarm current × 0.5h)\nVD = I × 2L × R/1000 (2-wire loop)\nIS 2189 Cl.5: zone area ≤ 2000m² per zone\nFire-rated cable: IS 694 / IS 1554 FR rating',NEC:'NFPA 72 Ch.10: power supply requirements\nBattery: 24h standby + 5min alarm (NFPA 72) or 60h standby per building code\nNEC Art. 760: fire alarm circuit classifications\nClass 1 (power-limited), Class 2/3 (signaling)\nWire: minimum 18 AWG for IDC, 14 AWG for NAC',IEC:'IEC 60839-5-1: fire alarm system design\nEN 54-4: power supply equipment\nBattery: 72h standby + 30min alarm (EN 54-4)\nIEC 60331: cable fire resistance test (PH30/60/120)\nIEC 60332-3: cable flame propagation test'},
       example:{sector:'com',given:'10-storey commercial building, 50,000 sq ft per floor. Design fire alarm power supply and battery backup.',steps:['Total detectors: ~1200 addressable smoke/heat','SLC loops: 6 loops × 200 devices each','Standby current per loop: 0.15A × 6 = 0.9A','FACP standby (panel, display): 0.5A','Total standby: 0.9 + 0.5 = 1.4A','Alarm current: all NACs active = 4.0A + panel = 0.5A = 4.5A','Battery Ah = (1.4 × 24) + (4.5 × 0.5) = 33.6 + 2.25 = 35.85 Ah','Select 2 × 18Ah batteries in series (36V system) or 2 × 38Ah at 24V','Add 20% safety factor: 38Ah × 1.2 = 45.6Ah → select 2 × 24Ah (48Ah)','Dual mains supply from essential power DB via dedicated MCB'],result:'Addressable FAS with 6 SLC loops, Class A wiring. Battery: 2×24Ah (24V). Dedicated dual-fed mains supply. FR-LSH cable throughout. Total 1200 devices across 10 floors.'},
       rot:["Fire alarm battery rule of thumb: 24h standby + 30min alarm minimum. For hospitals and critical facilities, use 72h standby. Always add 20% margin for battery aging.","Every fire alarm circuit must be on a dedicated MCB labeled 'FIRE ALARM — DO NOT SWITCH OFF'. Use a red MCB or lockable MCB."],
