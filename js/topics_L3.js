@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    ElecPro — topics_L3.js
-   Level 3: Equipment Sizing — 15 topics COMPLETE
+   Level 3: Equipment Sizing — 20 topics COMPLETE
    ═══════════════════════════════════════════ */
 
 const TOPICS_L3 = [
@@ -439,7 +439,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── 6. HVAC ELECTRICAL ── */
+  /* ── 8. HVAC ELECTRICAL LOADS ── */
   {
     id:'hvac-electrical', level:3, icon:'❄️', title:'HVAC Electrical Load',
     desc:'Chiller, AHU, FCU, and cooling tower electrical loads — calculation and VFD integration.',
@@ -515,7 +515,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── 7. SWITCHGEAR & PANELS ── */
+  /* ── 9. SWITCHGEAR & PANELS ── */
   {
     id:'switchgear-panels', level:3, icon:'🗄️', title:'Switchgear & Panel Design',
     desc:'MDB, SMDB, and DB design — bus rating, fault level, metering, and protection hierarchy.',
@@ -588,7 +588,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── 8. BUSBAR SIZING ── */
+  /* ── 10. BUSBAR SIZING ── */
   {
     id:'busbar-sizing', level:3, icon:'🔩', title:'Busbar Sizing',
     desc:'Current density, temperature rise, short circuit thermal and electromagnetic force withstand.',
@@ -663,7 +663,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── 9. CABLE TRAY SIZING ── */
+  /* ── 11. CABLE TRAY SIZING ── */
   {
     id:'cable-tray-sizing', level:3, icon:'📦', title:'Cable Tray Sizing',
     desc:'Fill ratio, tray width selection, weight loading, installation method derating.',
@@ -737,7 +737,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── 10. BREAKER SELECTION ── */
+  /* ── 12. BREAKER SELECTION ── */
   {
     id:'breaker-selection', level:3, icon:'🔘', title:'Breaker Selection Logic',
     desc:'Frame size, trip unit type, breaking capacity, and selectivity for MCBs, MCCBs, and ACBs.',
@@ -1228,7 +1228,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── SPD SELECTION ── */
+  /* ── 16. SPD SELECTION ── */
   {
     id:'spd-selection', level:3, icon:'🛡️', title:'SPD Selection & Coordination',
     desc:'Type 1, 2, 3 surge protection device selection, coordination, and installation per IS/IEC/NEC.',
@@ -1322,7 +1322,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── FIRE ALARM ELECTRICAL DESIGN ── */
+  /* ── 17. FIRE ALARM ELECTRICAL DESIGN ── */
   {
     id:'fire-alarm', level:3, icon:'🔥', title:'Fire Alarm System Electrical Design',
     desc:'Fire detection and alarm system — circuit design, cable types, battery sizing, and zoning per IS 2189 / NFPA 72 / IEC 60839.',
@@ -1331,7 +1331,7 @@ const TOPICS_L3 = [
     beginner:{
       intro:"Fire alarm systems are life safety systems — their electrical design requires dedicated circuits, fire-rated cables, and battery backup. The electrical engineer is responsible for power supply, cable routing, and integration with other building systems.",
       whyMatters:[{icon:'🔥',text:'Fire alarm failure = lives lost. Electrical design must ensure 100% reliability — no single point of failure'},{icon:'🔋',text:'Battery backup must sustain the system for 24-72 hours standby + 30 minutes alarm — undersized batteries are a code violation'},{icon:'📐',text:'Cable type, routing, and voltage drop are critical — wrong cable type loses fire rating, excessive VD causes false alarms'}],
-      theory:"SYSTEM TYPES:\nConventional: zones with multiple detectors on shared circuits. Panel identifies zone, not individual detector.\nAddressable: each detector has unique address. Panel identifies exact device. Preferred for commercial/industrial.\nAnalog-addressable: provides sensitivity levels, pre-alarm warnings, drift compensation.\n\nCIRCUIT TYPES:\nSLC (Signaling Line Circuit): data loop connecting addressable detectors. Class A (monitored, redundant path) or Class B (single path).\nNAC (Notification Appliance Circuit): powers sounders, beacons, strobes.\nIDC (Initiating Device Circuit): connects conventional detectors and manual call points.\n\n[IS]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nIS 694 / IS 1554: FR-LSH (Fire Resistant, Low Smoke Halogen-free) or equivalent standard cables.\n\nPOWER SUPPLY:\n24V DC from FACP (Fire Alarm Control Panel).\nDual mains supply (essential circuit) + battery backup.\nBattery: typically 48h standby + 30min alarm per NBC/IS requirements.\n\n[NEC]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nNEC Art.760: FPL (General purpose), FPLR (Riser), or FPLP (Plenum) cables based on routing.\n\nPOWER SUPPLY:\n24V DC from FACP.\nDual mains supply (essential circuit) + battery backup.\nBattery: 24h standby + 5min alarm (general) or 15min alarm (voice evac) per NFPA 72.\n\n[IEC]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nIEC 60331 / BS 5839: PH30, PH60, PH120 ratings depending on required survivability time.\n\nPOWER SUPPLY:\n24V DC from FACP.\nDual mains supply + battery backup.\nBattery: 72h standby + 30min alarm, or 24h+30min if generator backup present (BS 5839/EN 54).\n\nVOLTAGE DROP:\nEnd-of-line VD must not cause device dropout. Typical limit: 10% of 24V = 2.4V max.\nFor NAC circuits: calculate current draw of all sounders/strobes on circuit.",
+      theory:"SYSTEM TYPES:\nConventional: zones with multiple detectors on shared circuits. Panel identifies zone, not individual detector.\nAddressable: each detector has unique address. Panel identifies exact device. Preferred for commercial/industrial.\nAnalog-addressable: provides sensitivity levels, pre-alarm warnings, drift compensation.\n\nCIRCUIT TYPES:\nSLC (Signaling Line Circuit): data loop connecting addressable detectors. Class A (monitored, redundant path) or Class B (single path).\nNAC (Notification Appliance Circuit): powers sounders, beacons, strobes.\nIDC (Initiating Device Circuit): connects conventional detectors and manual call points.\n\n[IS]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nIS 694 / IS 1554: FR-LSH (Fire Resistant, Low Smoke Halogen-free) or equivalent standard cables.\n\nPOWER SUPPLY:\n24V DC from FACP (Fire Alarm Control Panel).\nDual mains supply (essential circuit) + battery backup.\nBattery: typically 48h standby + 30min alarm per NBC/IS requirements.\n\n[NEC]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nNEC Art.760: FPL (General purpose), FPLR (Riser), or FPLP (Plenum) cables based on routing.\n\nPOWER SUPPLY:\n24V DC from FACP.\nDual mains supply (essential circuit) + battery backup.\nBattery: 24h standby + 5min alarm (general) or 15min alarm (voice evac) per NFPA 72.\n\n[IEC]\nCABLE REQUIREMENTS:\nFire-rated cable: must survive fire for rated duration.\nIEC 60331 / BS 5839: PH30, PH60, PH120 ratings depending on required survivability time.\n\nPOWER SUPPLY:\n24V DC from FACP.\nDual mains supply + battery backup.\nBattery: 72h standby + 30min alarm, or 24h+30min if generator backup present (BS 5839/EN 54).\n\n[ALL]\nVOLTAGE DROP:\nEnd-of-line VD must not cause device dropout. Typical limit: 10% of 24V = 2.4V max.\nFor NAC circuits: calculate current draw of all sounders/strobes on circuit.",
       formula:{IS:'IS 2189 Cl.7: power supply requirements\nBattery Ah = (standby current × 24h) + (alarm current × 0.5h)\nVD = I × 2L × R/1000 (2-wire loop)\nIS 2189 Cl.5: zone area ≤ 2000m² per zone\nFire-rated cable: IS 694 / IS 1554 FR rating',NEC:'NFPA 72 Ch.10: power supply requirements\nBattery: 24h standby + 5min alarm (NFPA 72) or 60h standby per building code\nNEC Art. 760: fire alarm circuit classifications\nClass 1 (power-limited), Class 2/3 (signaling)\nWire: minimum 18 AWG for IDC, 14 AWG for NAC',IEC:'IEC 60839-5-1: fire alarm system design\nEN 54-4: power supply equipment\nBattery: 72h standby + 30min alarm (EN 54-4)\nIEC 60331: cable fire resistance test (PH30/60/120)\nIEC 60332-3: cable flame propagation test'},
       example:{sector:'com',given:'10-storey commercial building, 50,000 sq ft per floor. Design fire alarm power supply and battery backup.',steps:['Total detectors: ~1200 addressable smoke/heat','SLC loops: 6 loops × 200 devices each','Standby current per loop: 0.15A × 6 = 0.9A','FACP standby (panel, display): 0.5A','Total standby: 0.9 + 0.5 = 1.4A','Alarm current: all NACs active = 4.0A + panel = 0.5A = 4.5A','Battery Ah = (1.4 × 24) + (4.5 × 0.5) = 33.6 + 2.25 = 35.85 Ah','Select 2 × 18Ah batteries in series (36V system) or 2 × 38Ah at 24V','Add 20% safety factor: 38Ah × 1.2 = 45.6Ah → select 2 × 24Ah (48Ah)','Dual mains supply from essential power DB via dedicated MCB'],result:'Addressable FAS with 6 SLC loops, Class A wiring. Battery: 2×24Ah (24V). Dedicated dual-fed mains supply. FR-LSH cable throughout. Total 1200 devices across 10 floors.'},
       rot:["Fire alarm battery rule of thumb: 24h standby + 30min alarm minimum. For hospitals and critical facilities, use 72h standby. Always add 20% margin for battery aging.","Every fire alarm circuit must be on a dedicated MCB labeled 'FIRE ALARM — DO NOT SWITCH OFF'. Use a red MCB or lockable MCB."],
@@ -1355,7 +1355,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── REVENUE METERING CT SELECTION ── */
+  /* ── 18. REVENUE METERING CT SELECTION ── */
   {
     id:'metering-ct', level:3, icon:'📊', title:'Revenue Metering CT Selection',
     desc:'Current transformer selection for energy metering — accuracy class, burden, ratio, and smart metering per IS/IEC/NEC.',
@@ -1388,7 +1388,7 @@ const TOPICS_L3 = [
     quiz:[]
   },
 
-  /* ── CABLE PULL TENSION ── */
+  /* ── 19. CABLE PULL TENSION ── */
   {
     id:'cable-pull-tension', level:3, icon:'🔧', title:'Cable Drum & Pull Tension',
     desc:'Cable installation design — pull tension calculation, sidewall bearing pressure, bend radius, and drum selection.',
@@ -1419,7 +1419,78 @@ const TOPICS_L3 = [
     sectorNotes:{com:'Commercial: mainly MV/LV cables in risers. Fireproofing of cable penetrations critical. Pull calculations for riser cables in high-rise buildings.',ind:'Industrial: long horizontal runs in cable tunnels. Power cable pulling equipment (winch, rollers, lubricant) required for 300mm²+ cables. Cleating for short-circuit forces.',dc:'Data centre: structured cabling with cable management. Power cables to UPS/PDU — typically short runs in raised floor or overhead basket tray. Pull tension rarely critical.',og:'Offshore: most critical sector for cable pulling. Marine environment, limited crane capacity, cable drum logistics. Contract specifies pull procedures, witnessed pulls, and documentation.'},
     standards:{IS:[{clause:'IS 1255',title:'Code of practice for installation of cables',note:'Cable installation methods, bend radii, and pulling requirements'},{clause:'IS 1554',title:'PVC insulated cables',note:'Mechanical properties and minimum bend radii'}],NEC:[{clause:'NEC 300.34',title:'Conductor bending radius',note:'Minimum bend radius by voltage class and cable type'},{clause:'NEC Ch.9',title:'Tables — conduit fill and cable data',note:'Conduit sizing and jamming ratio checks'}],IEC:[{clause:'IEC 60502',title:'Power cables — extruded insulation',note:'Mechanical properties, bend radius, and installation requirements'},{clause:'IEC 60287',title:'Current rating of cables',note:'Thermal design for installed cables (linked to installation method)'}]},
     quiz:[]
+  },
+
+  /* ── 20. SERVICE ENTRANCE & MAIN GROUNDING ── */
+  {
+    id: 'service-entrance', level: 3, icon: '🏠', title: 'Service Entrance & Main Grounding',
+    desc: 'Utility interface design — service conductors, metering enclosure, main disconnect, and primary building grounding electrode system.',
+    tags: ['Service Entrance', 'Main Disconnect', 'Grounding Electrode', 'Utility Interface', 'Main Grounding'],
+    sectors: ['res', 'com', 'ind', 'dc', 'hc'], green: false, calculator: null,
+    beginner: {
+      intro: "The service entrance is where the utility power first enters the building. This is the most critical part of the system for both billing accuracy and life safety, as it contains the main disconnect and the primary grounding point for the entire facility.",
+      whyMatters: [
+        { icon: '🏠', text: 'Correct service sizing ensures the building can handle projected loads without utility fuse blowing' },
+        { icon: '🛡️', text: 'The Main Grounding Electrode System is the single most important safety feature of any building' },
+        { icon: '💰', text: 'Proper metering CT/PT installation ensures accurate utility billing and avoids penalties' }
+      ],
+      theory: "SERVICE COMPONENTS:\\n1. Service Point: Where utility ownership ends and customer ownership begins.\\n2. Service Drop/Lateral: The conductors from the utility pole/transformer to the building.\\n3. Metering: CT/PT or direct-connected meter enclosure.\\n4. Main Disconnect: A single switch or breaker (up to 6 per NEC) that shuts off all power.\\n5. Grounding Electrode System: Driven rods, concrete-encased steel (Ufer), or buried plates connected to the 'Main Grounding Busbar'.\\n\\n[IS]\\nService entry typically via underground cable (IS 1255) to a main 'Distribution Board' (DB). Grounding must follow IS 3043, requiring minimum two dedicated earth pits for the main neutral and body grounding.\\n\\n[NEC]\\nService conductors sized at 125% of continuous load (Article 230). Grounding Electrode System (Article 250) must include available electrodes like metal water pipes, building steel, and ground rods.\\n\\n[IEC]\\nService entry defined by 'Connection Point'. Grounding system (TN-S, TN-C-S, or TT) determines how neutral and earth are handled (IEC 60364-1).",
+      formula: {
+        IS: 'IS 732: code of practice for electrical wiring\\nIS 3043: code of practice for earthing\\nNeutral Earthing: Dedicated pit with < 1 ohm resistance\\nBody Earthing: Connected to common grid',
+        NEC: 'NEC Article 230: Services\\nNEC Article 250: Grounding and Bonding\\nMain Bonding Jumper Sizing: Table 250.102(C)(1)\\nGrounding Electrode Conductor: Table 250.66',
+        IEC: 'IEC 60364-1: Fundamental principles and definitions\\nIEC 60364-5-54: Grounding arrangements and protective conductors\\nEarthing types: TN, TT, IT systems'
+      },
+      example: {
+        sector: 'res',
+        given: 'Single-family home, 200A 120/240V service (NEC) or 63A 3-phase 415V service (IS). Select main grounding conductor.',
+        steps: [
+          'NEC Case: 200A service typically uses 2/0 AWG Cu or 4/0 AWG Al Phase conductors.',
+          'Refer to NEC Table 250.66: For 2/0 AWG Cu Phase, GEC = 4 AWG Cu.',
+          'IS Case: 63A service using 16mm² Cu cable.',
+          'Refer to IS 3043: Minimum 6mm² Cu or 10mm² GI wire for body earthing. Neutral earthing usually 25x3mm GI strip.'
+        ],
+        result: 'NEC: 4 AWG Cu Grounding Electrode Conductor. IS: 10mm² GI or 6mm² Cu Earth wire to dedicated pit.'
+      },
+      rot: ["The 'Six Disconnect Rule': NEC 230.71 allows up to six switches or circuit breakers to serve as the main service disconnect grouped in one location. If you need more, you need a single main breaker upstream.","Grounding Rule: If you use more than one type of electrode (rod, plate, pipe), they MUST all be bonded together to form a single Grounding Electrode System."],
+      mistakes: ["Using only a single ground rod when a metal water pipe or building steel is available — NEC requires bonding all available electrodes", "Installing the main bonding jumper (connecting neutral to ground) at multiple locations — it must ONLY be at the first service disconnect", "Undersized service neutral: Neutral must be sized to handle maximum unbalanced load and fault current."],
+      interviewQs: ["What is the purpose of the Main Bonding Jumper?", "Name three types of grounding electrodes recognized by the NEC.", "What is the difference between a TN-S and a TN-C-S earthing system?"],
+      siteTips: ["Always measure earth resistance (using a 3-point fall-of-potential tester) before connecting the service. If resistance > 25 ohms (NEC) or > 1 ohm (IS industrial), you must add more electrodes. Don't wait for a fault to find out your earthing is poor."],
+      diagram: { type: 'schematic', svgId: 'service-entrance-diagram' }
+    },
+    advanced: {
+      theory: "LARGE SCALE SERVICES (1000A+):\\nFor large commercial/industrial sites, the service often includes a medium-voltage (MV) transformer. The 'Service Point' may be on the MV side (utility owns transformer) or LV side (customer owns transformer).\\n\\nGROUNDING ELECTRODES IN DETAIL:\\n- Concrete-Encased Electrode (Ufer Ground): 20ft (6m) of 1/2in rebar or 4 AWG bare Cu in the foundation. Extremely effective in dry soil.\\n- Ground Ring: Encircles the entire building, minimum 2.5ft (750mm) deep.\\n- Plate Electrode: Minimum 2 sq ft (0.18 m²) surface area.\\n\\nNEUTRAL SYSTEMS (IEC 60364):\\n- TN-S: Separate Neutral and Protective Earth (PE) throughout.\\n- TN-C-S: Combined PEN conductor from utility, split into N and PE at service entrance (very common).\\n- TT: Local earth is independent of utility earth (requires RCD on all circuits).",
+      formula: {
+        IS: 'Neutral Earthing resistance: R = ρ / (2πL) [ln(4L/d) - 1]\\nL = rod length, d = diameter, ρ = soil resistivity\\nMultiple rods in parallel: R_total = R_single / (n × efficiency factor)',
+        NEC: 'NEC 250.122: Sizing Equipment Grounding Conductors based on OCPD rating\\nNEC 250.66: Sizing Grounding Electrode Conductors based on largest Service Entrance Phase Conductor',
+        IEC: 'IEC 60364-4-41: Protection against electric shock\\nFault Loop Impedance (Zs): Zs = Ze + (R1 + R2) ≤ Uo / Ia'
+      },
+      example: {
+        sector: 'ind',
+        given: 'Industrial Plant: 2000A service, 415V. Soil resistivity is high (500 ohm-m). Design grounding.',
+        steps: [
+          'Calculate required fault current path: 2000A breaker.',
+          'NEC 250.66: For Phase > 1100 kcmil Cu, GEC = 3/0 AWG Cu.',
+          'High soil resistivity: Standard rods will fail. Install a 2.5m deep ground ring + multiple 3m chemical rods.',
+          'Chemical rods use electrolytic salts to leach into soil, reducing resistivity locally.',
+          'Bond all machine frames, structural steel, and lightning protection to this common grid.'
+        ],
+        result: 'Ground ring with chemical electrodes to ensure < 1 ohm resistance. 3/0 AWG Cu main GEC.'
+      },
+      rot: ["High Resistivity Soil: Chemical ground rods or ground enhancement material (GEM) can reduce resistance by 50-80% compared to standard rods in problematic soils."],
+      mistakes: ["Not bonding building structural steel to the grounding system — building steel is often the best electrode available", "Using an undersized GEC for high-capacity services — check the tables, don't guess", "Mixing different types of grounding in one building (e.g., separate 'instrument' earth not bonded to 'power' earth) — causes dangerous potential differences during faults."],
+      interviewQs: ["Why is it important to bond all grounding electrodes together?", "How does a chemical ground rod work?", "What is the 'Ufer ground' and why is it effective?"],
+      siteTips: ["In areas with rocky soil, you may need to use a 'Ground Plate' or a 'Grounding Grid' instead of rods. If you cannot reach 8ft depth, burying conductors horizontally in a trench is a valid alternative in both IS and NEC."],
+      diagram: { type: 'schematic', svgId: 'adv-grounding-system' }
+    },
+    sectorNotes: { res: 'Focus: meter box, ground rod, Ufer ground, bonding to water/gas pipes.', com: 'Focus: service switchboard, GEC sizing, bonding building steel.', dc: 'Focus: Equipotential bonding, Signal Reference Grid (SRG), mesh grounding for RFI.', ind: 'Focus: HV substation grounding, ground ring, chemical rods, motor frame bonding.', og: 'Focus: Corrosion protection for grounding, bonding all metallic structures to prevent static.', hc: 'Focus: Dedicated grounding for imaging equipment, patient vicinity grounding limits (max 100mV potential diff).' },
+    standards: {
+      IS: [{ clause: 'IS 3043', title: 'Code of practice for earthing', note: 'The primary Indian standard for grounding system design' }, { clause: 'IS 732', title: 'Code of practice for electrical wiring', note: 'Standard for building wiring and service entry' }],
+      NEC: [{ clause: 'NEC Article 230', title: 'Services', note: 'Requirements for service entry and disconnects' }, { clause: 'NEC Article 250', title: 'Grounding and Bonding', note: 'Comprehensive US standard for grounding electrode systems' }],
+      IEC: [{ clause: 'IEC 60364-5-54', title: 'Grounding arrangements', note: 'International standard for grounding and protective conductors' }, { clause: 'IEC 62305', title: 'Lightning protection', note: 'Grounding requirements for lightning protection systems' }]
+    },
+    quiz: []
   }
+
 
 ];
 

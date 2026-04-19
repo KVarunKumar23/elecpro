@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    ElecPro — topics_L4.js
-   Level 4: Advanced Systems — 12 topics COMPLETE
+   Level 4: Advanced Systems — 14 topics COMPLETE
    ═══════════════════════════════════════════ */
 
 const TOPICS_L4 = [
@@ -98,7 +98,7 @@ const TOPICS_L4 = [
         {icon:'⚡', text:'Overcurrent relays must be fast enough to protect cables but slow enough not to nuisance trip'},
         {icon:'🏭', text:'Industrial relay coordination can prevent a single motor fault from shutting down a factory'}
       ],
-      theory:"PROTECTION RELAY TYPES (ANSI device numbers):\n50: Instantaneous overcurrent — trips without time delay above setpoint\n51: Inverse definite minimum time (IDMT) — trip time decreases as current increases\n50N/51N: Earth fault versions (neutral current)\n27: Undervoltage relay\n59: Overvoltage relay\n87T: Transformer differential\n49: Thermal overload\n\n[IS]\nIDMT CHARACTERISTICS (IEC 60255 / IS 3231):\nStandard Inverse (SI):   t = 0.14 × TMS / ((I/Is)^0.02 − 1)\nVery Inverse (VI):       t = 13.5 × TMS / ((I/Is) − 1)\nExtremely Inverse (EI):  t = 80 × TMS / ((I/Is)² − 1)\n\n[IEC]\nIDMT CHARACTERISTICS (IEC 60255):\nStandard Inverse (SI):   t = 0.14 × TMS / ((I/Is)^0.02 − 1)\nVery Inverse (VI):       t = 13.5 × TMS / ((I/Is) − 1)\nExtremely Inverse (EI):  t = 80 × TMS / ((I/Is)² − 1)\nNOTE: Select curve based on equipment thermal damage curve and upstream coordination.\n\n[NEC]\nIDMT CHARACTERISTICS (IEEE C37.112):\nIn North America, IEEE curves are standard alongside protective device TCCs:\nModerately Inverse:  t = Time Dial × [0.0515 / ((I/Is)^0.02 − 1) + 0.114]\nVery Inverse:        t = Time Dial × [19.61 / ((I/Is)² − 1) + 0.491]\nExtremely Inverse:   t = Time Dial × [28.2 / ((I/Is)² − 1) + 0.1217]\nNOTE: Curve selection depends on use case (e.g. extremely inverse to coordinate with fuses).\n\nGRADING MARGIN:\nMinimum time difference between relay curves at maximum fault current: 0.25–0.4s\nAllows for: relay overshoot, CB operating time, CT error, safety margin\n\nCOORDINATION PROCESS:\nStart at the load end (lowest level relay)\nWork upstream, adding grading margin at each level\nPlot time-current curves (TCC) on log-log paper\nVerify no curve overlap at any fault current level",
+      theory:"PROTECTION RELAY TYPES (ANSI device numbers):\n50: Instantaneous overcurrent — trips without time delay above setpoint\n51: Inverse definite minimum time (IDMT) — trip time decreases as current increases\n50N/51N: Earth fault versions (neutral current)\n27: Undervoltage relay\n59: Overvoltage relay\n87T: Transformer differential\n49: Thermal overload\n\n[IS]\nIDMT CHARACTERISTICS (IEC 60255 / IS 3231):\nStandard Inverse (SI):   t = 0.14 × TMS / ((I/Is)^0.02 − 1)\nVery Inverse (VI):       t = 13.5 × TMS / ((I/Is) − 1)\nExtremely Inverse (EI):  t = 80 × TMS / ((I/Is)² − 1)\n\n[IEC]\nIDMT CHARACTERISTICS (IEC 60255):\nStandard Inverse (SI):   t = 0.14 × TMS / ((I/Is)^0.02 − 1)\nVery Inverse (VI):       t = 13.5 × TMS / ((I/Is) − 1)\nExtremely Inverse (EI):  t = 80 × TMS / ((I/Is)² − 1)\nNOTE: Select curve based on equipment thermal damage curve and upstream coordination.\n\n[NEC]\nIDMT CHARACTERISTICS (IEEE C37.112):\nIn North America, IEEE curves are standard alongside protective device TCCs:\nModerately Inverse:  t = Time Dial × [0.0515 / ((I/Is)^0.02 − 1) + 0.114]\nVery Inverse:        t = Time Dial × [19.61 / ((I/Is)² − 1) + 0.491]\nExtremely Inverse:   t = Time Dial × [28.2 / ((I/Is)² − 1) + 0.1217]\nNOTE: Curve selection depends on use case (e.g. extremely inverse to coordinate with fuses).\n\n[ALL]\nGRADING MARGIN:\nMinimum time difference between relay curves at maximum fault current: 0.25–0.4s\nAllows for: relay overshoot, CB operating time, CT error, safety margin\n\nCOORDINATION PROCESS:\nStart at the load end (lowest level relay)\nWork upstream, adding grading margin at each level\nPlot time-current curves (TCC) on log-log paper\nVerify no curve overlap at any fault current level",
       formula:{
         IS:'SI: t = 0.14 × TMS / ((I/Is)^0.02 − 1)\nVI: t = 13.5 × TMS / ((I/Is) − 1)\nEI: t = 80 × TMS / ((I/Is)² − 1)\nGrading margin: Δt ≥ 0.25s (minimum)\nPickup setting: Is = 1.0–1.2 × FLC',
         NEC:'IEEE 242 (Buff Book): protection coordination\nNEMA relay curves: CO-8 (SI), CO-11 (EI)\nGrading: ≥ 0.2s between TCC curves at max fault',
@@ -434,7 +434,7 @@ const TOPICS_L4 = [
       diagram:{type:'schematic', svgId:'solar-pv-diagram'}
     },
     advanced:{
-      theory:"[IS]\nNET METERING AND GRID INTERCONNECTION:\nNet metering: exported solar energy credited at import tariff rate.\nGross metering: all solar sold at solar tariff, all consumption bought at grid tariff.\nCEA Regulations 2019 (India): net metering typically mandated for <1 MW systems.\nAnti-islanding: inverter must detect grid loss and disconnect within 2 seconds (IEC 62116).\n\n[NEC]\nGRIDE-TIE INTERCONNECTION (IEEE 1547 / NEC 705):\nNet Energy Metering (NEM): exported solar energy credited at utility rates (rules vary by state).\nRapid Shutdown (NEC 690.12): Must reduce voltage to <30V within 10 seconds inside the array boundary to protect firefighters.\nAnti-islanding: inverter must disconnect on grid loss (UL 1741).\n\n[IEC]\nGRID INTERCONNECTION:\nNet metering/Feed-in tariffs depend heavily on regional EU/national policies.\nAnti-islanding: inverter must detect grid loss and disconnect within 2 seconds (IEC 62116).\nGrid-support functions: Requirements for low-voltage ride-through and reactive power control.\n\nTILT AND ORIENTATION:\nOptimum tilt ≈ latitude of location.\nSouth-facing maximises annual yield in Northern hemisphere.\nBifacial modules: gain 5–20% from reflected light on rear surface.\n\nSHADING ANALYSIS:\nShading reduces yield significantly — even partial shading can reduce entire string output.\nSolar path analysis: software (PVsyst, Helioscope) models shadows at every hour of year.\nMPPT per string or per module (micro-inverter) minimises shading loss.\n\nBESSS + SOLAR:\nSelf-consumption maximised when BESS stores excess solar for evening use.\nOptimal BESS size: typically 1–2 hours of peak solar generation.\nCapital return: BESS improves ROI only when self-consumption value > grid export rate.",
+      theory:"[IS]\nNET METERING AND GRID INTERCONNECTION:\nNet metering: exported solar energy credited at import tariff rate.\nGross metering: all solar sold at solar tariff, all consumption bought at grid tariff.\nCEA Regulations 2019 (India): net metering typically mandated for <1 MW systems.\nAnti-islanding: inverter must detect grid loss and disconnect within 2 seconds (IEC 62116).\n\n[NEC]\nGRIDE-TIE INTERCONNECTION (IEEE 1547 / NEC 705):\nNet Energy Metering (NEM): exported solar energy credited at utility rates (rules vary by state).\nRapid Shutdown (NEC 690.12): Must reduce voltage to <30V within 10 seconds inside the array boundary to protect firefighters.\nAnti-islanding: inverter must disconnect on grid loss (UL 1741).\n\n[IEC]\nGRID INTERCONNECTION:\nNet metering/Feed-in tariffs depend heavily on regional EU/national policies.\nAnti-islanding: inverter must detect grid loss and disconnect within 2 seconds (IEC 62116).\nGrid-support functions: Requirements for low-voltage ride-through and reactive power control.\n\n[ALL]\nTILT AND ORIENTATION:\nOptimum tilt ≈ latitude of location.\nSouth-facing maximises annual yield in Northern hemisphere.\nBifacial modules: gain 5–20% from reflected light on rear surface.\n\nSHADING ANALYSIS:\nShading reduces yield significantly — even partial shading can reduce entire string output.\nSolar path analysis: software (PVsyst, Helioscope) models shadows at every hour of year.\nMPPT per string or per module (micro-inverter) minimises shading loss.\n\nBESSS + SOLAR:\nSelf-consumption maximised when BESS stores excess solar for evening use.\nOptimal BESS size: typically 1–2 hours of peak solar generation.\nCapital return: BESS improves ROI only when self-consumption value > grid export rate.",
       formula:{
         IS:'Net export: kWh_net = kWh_generated − kWh_consumed\nTariff credit: credit = net_export × import_tariff\nCEA 2019: max net metered capacity = sanctioned load\nPayback: N = capital cost / (yield × tariff)',
         NEC:'NEC 690.60: point of connection to grid\nIEEE 1547: interconnection of distributed energy resources\nAnti-islanding: ≤ 2s after utility loss (IEEE 1547)',
@@ -1005,6 +1005,145 @@ const TOPICS_L4 = [
     },
     sectorNotes:{com:'Commercial: standard APFC panels with detuned reactors. Typical 100-500 kVAr. Thyristor-switched for buildings with elevators and UPS.',ind:'Industrial: large capacitor banks (500 kVAr - 10 MVAr). Tuned harmonic filters mandatory where VFDs and non-linear loads exceed 30% of total load. Vacuum CB switching for HV banks.',og:'Offshore: compact capacitor banks, rated for marine environment. Active harmonic filters preferred (space-efficient, no resonance risk). Capacitor banks on generator bus for PF correction at source.'},
     standards:{IS:[{clause:'IS 13585',title:'Shunt capacitor banks for power systems',note:'Indian standard for capacitor bank design, protection, and installation'},{clause:'IS 13340',title:'Capacitor duty contactors',note:'Requirements for contactors used in capacitor switching'}],NEC:[{clause:'NEC Art. 460',title:'Capacitor installations',note:'Conductor sizing, discharge requirements, overcurrent protection'},{clause:'IEEE 519-2014',title:'Harmonic limits',note:'Recommended practice for harmonic control in power systems'}],IEC:[{clause:'IEC 60831',title:'Self-healing shunt capacitors',note:'Testing and performance requirements for LV capacitor units'},{clause:'IEC 61642',title:'Industrial AC networks affected by harmonics',note:'Application guide for harmonic assessment and mitigation'}]},
+    quiz:[]
+  },
+
+  /* ── 13. TESTING & COMMISSIONING ── */
+  {
+    id:'testing-commissioning', level:4, icon:'📋', title:'Testing & Commissioning',
+    desc:'Pre-functional checks, insulation resistance, earth testing, and relay secondary injection.',
+    tags:['Testing', 'Commissioning', 'Megger', 'Primary Injection', 'Secondary Injection', 'IR Test'],
+    sectors:['res','com','ind','dc','og','hc'], green:false, calculator:null,
+    beginner:{
+      intro:"Design is only half the battle; the other half is proving the installation works as designed. Commissioning is the bridge between construction and operation. It ensures every cable, breaker, and relay performs its safety function before life and property are at risk.",
+      whyMatters:[
+        {icon:'🔍', text:'Testing reveals hidden installation faults (loose connections, damaged insulation) before power-on'},
+        {icon:'🛡️', text:'Commissioning proves protection relays will actually trip during a fault — essential safety verification'},
+        {icon:'📋', text:'Valid test reports are legal requirements for insurance, utility connection, and occupancy permits'}
+      ],
+      theory:"[ALL]\nCORE PRE-ENERGIZATION TESTS:\n\n1. INSULATION RESISTANCE (IR) / MEGGER TEST:\nMeasures resistance between phases and phase-to-earth.\nAcceptance: > 1 MΩ minimum (rule of thumb: 1 MΩ per kV + 1 MΩ). Reliable systems show > 100 MΩ.\nTest Voltage: 500V DC for LV, 2500V/5000V DC for HV.\n\n2. CONTINUITY & LOOP IMPEDANCE:\nVerifies every socket and equipment is connected to earth.\nZs (loop impedance) must be low enough to trip the breaker within 0.4s (TN system).\n\n3. EARTH RESISTANCE TEST (3-POINT / FALL-OF-POTENTIAL):\nMeasures resistance of the earth electrode grid.\nRequirement: < 1.0Ω for substations, < 5.0Ω for residential.\n\n4. POLARITY CHECK:\nEnsures MCBs are on phases (not neutral) and phase rotation follows RYB (or ABC).\n\n5. RCD/RCCB TEST:\nVerified using RCD tester injecting 1.0× and 5.0× rated leakage current.\nTrip time: < 300ms (1.0×) and < 40ms (5.0×).\n\n[IS]\nSTATUTORY INSPECTION (INDIA):\nCEA (Central Electricity Authority) Regulations: All HV installations (>650V) must be inspected and certified by the Electrical Inspectorate before energization. Form I/Form J/Form K reports required.\n\n[NEC]\nCOMMISSIONING (USA):\nNEC Art. 110.7: Insulation integrity mandatory.\nNEC Art. 210.8: GFCI verification.\nCommissioning Agent (CxA): Independent verification required for LEED/energy projects.",
+      formula:{
+        IS:'IR_limit = (V_applied / 1000) + 1 MΩ\nEarth Resistance: 3-point fall-of-potential method\nMax fault current calculation from Zs: Isc = U₀ / Zs\nCEA test certificate: mandatory for HV (>650V)',
+        NEC:'NEC 110.7: wiring shall be free from short circuits\nNEC 250.56: resistance of electrode to ground ≤ 25Ω\nNFPA 70B: Recommended practice for maintenance and testing',
+        IEC:'IEC 60364-6: Verification and testing\nPeriodic inspection intervals: typically 3–5 years\nVoltage drop verification: max 5% from utility point'
+      },
+      example:{
+        sector:'res',
+        given:'Single-phase 230V residence: measure IR of a 2.5mm² circuit. Megger reads 0.5 MΩ. Check if acceptable.',
+        steps:[
+          'Rule: IR must be > 1 MΩ for 230V system (IS 732).',
+          'Actual: 0.5 MΩ < 1.0 MΩ → FAIL.',
+          'Action: Check for moisture in junction boxes, loose bare wires touching ground, or damaged cable insulation during pull.',
+          'Correction: Cleaning moisture from external junction box raised IR to 250 MΩ. ✓ PASS.'
+        ],
+        result:'Failed initial IR test (0.5 MΩ). Fixed by clearing moisture. Final IR 250 MΩ passes residential safety check.'
+      },
+      rot:["Megger Rule: 1 MΩ per 1000V + 1 MΩ base. For 415V system, anything below 10 MΩ should be investigated, even if standard allows 1 MΩ. Clean, dry systems usually read 'Infinity' (>2000 MΩ).","Earth Resistance: If you can't get below 5.0Ω with one electrode, add a second one at least twice the electrode length away and bond them together. Paralleling electrodes is more effective than deepening them."],
+      mistakes:["Energizing a system without a megger test — if a cable was nicked during pull, it will explode on power-on","Testing IR with sensitive electronics (VFDs, UPS, electronics) connected — the high megger voltage (500V/1000V DC) will destroy their internal rectifiers. Always disconnect electronics before IR testing."],
+      interviewQs:["What is a Megger and how does it work?","Why is phase rotation testing critical before starting motors?","What is the 3-point fall-of-potential method for earthing?"],
+      siteTips:["Never trust a 'visual only' inspection. Always use calibrated instruments. A cable may look fine but have internal insulation failure. Ensure your test kit has a valid calibration certificate (< 1 year old)."],
+      diagram:{type:'schematic', svgId:'testing-schema'}
+    },
+    advanced:{
+      theory:"PRIMARY VS SECONDARY INJECTION TESTING:\n\n1. SECONDARY INJECTION:\nInjects current (mA) directly into the protection relay terminals.\nTests: relay logic, pickup levels, time-delay curves (TCC).\nAdvantage: easy, portable kit, proves relay settings.\nDisadvantage: does not test CTs or main breaker wiring.\n\n2. PRIMARY INJECTION:\nInjects high current (kA) through the primary of the CT or the main conductors.\nTests: the whole protection chain (CT + wiring + relay + breaker).\nAdvantage: the 'gold standard' — proves every link in the safety chain works.\nDisadvantage: requires heavy, complex equipment and high power source.\n\nTRANSFORMER RATIO & WIT (Winding Insulation Test):\nRatio Test: ensures turns ratio matches nameplate (detects internal winding shorts).\nWinding resistance: detects loose internal connections.\nOil Breakdown (BDV) Test: measures dielectric strength of insulating oil. Target: > 30 kV (typical) or > 40 kV for HV.\n\nCONTACT RESISTANCE (DUCTOR) TEST:\nMeasures micro-ohms across breaker contacts or busbar joints.\nEnsures mechanical connections are tight. High resistance = hotspot = fire risk.",
+      formula:{
+        IS:'Transformer BDV: minimum 30kV for 33kV transformers (IS 6792)\nContact resistance: < 100 μΩ for large ACBs\nPrimary injection current: typically 50–100% of FLC\nIS 2026 Part 3: Insulation levels and dielectric tests',
+        NEC:'ANSI/NETA ATS: standard for acceptance testing specifications\nIEEE 519: power quality and harmonic testing\nGround resistance: IEEE 81 method',
+        IEC:'IEC 60076-1: transformer type and routine tests\nIEC 62271-100: HV switchgear routine tests\nIEC 60255: relay secondary injection accuracy requirements'
+      },
+      example:{
+        sector:'ind',
+        given:'1600A ACB feeder. Secondary injection proves relay trips at 1600A/1s. Primary injection at 1000A shows relay never trips. Investigate.',
+        steps:[
+          'Relay passed secondary injection ✓ (Electronic logic OK)',
+          'Primary injection failed ✗ (Physical chain broken)',
+          'Possible causes: (a) CT ratio wrong, (b) CT secondary wiring open/shorted, (c) Relay CT inputs failed.',
+          'Finding: CT ratio was 2000/5 but relay was programmed for 1000/5. Relay thought the 1000A inject was only 500A. Corrected setting.',
+          'Re-test: Primary injection now passes. Protection chain verified.'
+        ],
+        result:'Primary injection revealed a mismatched CT ratio setting that secondary injection missed. Critical for high-value protection systems.'
+      },
+      rot:["Contact resistance Rule: For 1600A+ bus joints, aim for < 10 micro-ohms (μΩ). Anything above 50 μΩ indicates a loose bolt and a guaranteed hotspot.","Transformer Oil: If BDV is < 30 kV, filter the oil using a centrifugal purifier to remove moisture and particles."],
+      mistakes:["Assuming secondary injection is 'enough' for critical protection — it bypasses the CT, which is the most common point of failure","Not verifying the phase rotation at the main incomer — reversing 3 phases makes every motor in the building spin backwards, potentially damaging pumps and elevators"],
+      interviewQs:["What is the difference between primary and secondary injection?","What is the purpose of a ductor test on busbars?","Why is 2nd harmonic restraint important during transformer commissioning?"],
+      siteTips:["Conduct 'Contact Resistance' (Ductor) tests on every main busbar joint during installation. It is 100× cheaper to tighten a bolt during construction than to replace a melted busbar after the building is occupied."],
+      diagram:{type:'schematic', svgId:'adv-testing-sld'}
+    },
+    sectorNotes:{res:'Basic safety check: IR, continuity, polarity, RCD trip. IS 732 compliance.',com:'Full LV testing: IR, loop impedance, RCD, earthing. Statutory inspection for HV transformers.',dc:'Advanced commissioning: load bank testing (N+1 validation), harmonic analysis, 24h thermal scanning, PUE verification.',ind:'Primary/secondary injection, ductor testing, transformer oil analysis. ETAP model validation.',og:'SIL-rated protection systems validation. Intrinsically safe (IS) loop testing. Ex equipment integrity check.',hc:'Equipotential bonding verification (<0.1Ω). Insulation monitoring (IT system) functional check. UPS backup time verification.'},
+    standards:{
+      IS:[{clause:'CEA Regulations 2010',title:'Certification and inspection',note:'Mandatory statutory electrical inspection legal requirement'},{clause:'IS 732 Cl.8',title:'Verification and testing',note:'Core residential/commercial test procedures'}],
+      NEC:[{clause:'NFPA 70B',title:'Electrical Equipment Maintenance',note:'Recommended practice for testing and maintenance'},{clause:'ANSI/NETA ATS',title:'Acceptance Testing Specifications',note:'Standard for commissioning electrical power systems'}],
+      IEC:[{clause:'IEC 60364-6',title:'Verification — Initial and Periodic',note:'Complete IEC procedure for electrical testing'},{clause:'IEC 60076-1',title:'Transformer routine tests',note:'Standard transformer factory and site tests'}]
+    },
+    quiz:[]
+  },
+
+  /* ── 14. DESIGN METHODOLOGY & PLANNING ── */
+  {
+    id:'design-methodology', level:4, icon:'📐', title:'Design Methodology & Planning',
+    desc:'The professional engineering workflow: concept, schematic, tender, and GFC stages.',
+    tags:['Design Process', 'Workflow', 'Project Planning', 'GFC', 'Tendering'],
+    sectors:['res','com','ind','dc','og','hc'], green:false, calculator:null,
+    beginner:{
+      intro:"Professional electrical engineering is not just about calculations; it's about a disciplined workflow. A great design follows a sequence that ensures requirements are captured, coordination is achieved, and construction is accurate. This is the roadmap used by top engineering firms.",
+      whyMatters:[
+        {icon:'🗺️', text:'A structured workflow prevents late-stage design changes that cause expensive project delays'},
+        {icon:'📋', text:'Clear deliverables (SLD, Layouts, BOQ) ensure the contractor builds exactly what you designed'},
+        {icon:'💰', text:'Value engineering during the planning stage can save 10–20% of capital cost without reducing quality'}
+      ],
+      theory:"[ALL]\nTHE DESIGN STAGES (Handbook of Electrical Design Details):\n\n1. CONCEPT DESIGN (Pre-Design):\n— Identify load requirements (kW/m² or VA/sq.ft).\n— Define supply voltage (HV/LV) and transformer count.\n— Space planning for plant rooms and vertical shafts.\n— Deliverable: Design Basis Report (DBR).\n\n2. SCHEMATIC DESIGN (Tender Stage):\n— Initial SLDs and preliminary equipment sizing.\n— Major cable routing identified.\n— Specification development and Bill of Quantities (BOQ).\n— Deliverable: Tender Drawings & Specifications.\n\n3. DETAILED DESIGN (GFC - Good For Construction):\n— Final coordinated layouts with HVAC, Plumbing, and Fire.\n— Precise cable tray routing and sections.\n— Fully populated Panel Schedules.\n— Deliverable: GFC Drawing Set.\n\n4. CONSTRUCTION & POST-CONSTRUCTION:\n— Site coordination and RFI (Request for Information) resolution.\n— Final As-Built drawings capturing site deviations.\n— Handover and commissioning.\n\n[IS]\nSTATUTORY MILESTONES (INDIA):\n— Planning stage: Electrical load declaration to utility.\n— Tender stage: BOQ creation for procurement.\n— Completion: CEA inspectorate approval (Statutory Inspection).\n\n[NEC]\nPERMITTING WORKFLOW (USA):\n— Design professional stamps drawings.\n— Submission to AHJ (Authority Having Jurisdiction) for permits.\n— Mandatory field inspections at rough-in and final stages.",
+      formula:{
+        IS:'Planning allowance: Office 50W/m², Hospital 60W/m² (NBC 2016)\nDiversity Factor: applied to connected load for MD\nBOQ Accuracy: target < 5% variance from final built quantities',
+        NEC:'NEC 220: Load calculation methodology\nNFPA 70E: Safety planning inclusion in design\nArticle 100: Mandatory definitions for legal compliance',
+        IEC:'ISO 9001: Quality management system in design\nIEC 60364-1 Art. 31: Assessment of general characteristics\nLife Cycle Cost (LCC): Investment + Energy + Maintenance'
+      },
+      example:{
+        sector:'com',
+        given:'Design an 8000 m² office building. Outline the first 3 steps of the concept stage.',
+        steps:[
+          '1. Estimate Load: 8000 m² × 55 W/m² = 440 kW MD. With 0.85 PF → 517 kVA.',
+          '2. Infrastructure: Select 1 × 630 kVA or 2 × 400 kVA (N+1) transformers. HV supply (11kV) likely required.',
+          '3. Spacing: Reserve 40 m² for MV/LV substation and 4 m² for electrical shafts (risers) on every floor.',
+          'Draft DBR: Declare load to utility and request 11kV feeder connection.'
+        ],
+        result:'Concept stage confirms: 11kV utility connection, 630 kVA transformer, and specific space requirements. Moving to schematics without this step risks building the whole project with no room for the transformer!'
+      },
+      rot:["The 20% Spare Rule: Always leave 20% spare capacity in transformers, 20% spare ways in DBs, and 20% spare space in cable trays. Designs that are 100% full on day one are failed designs.","Riser Rule: Locate electrical shafts as centrally as possible to the load. Centrally located shafts reduce branch cable lengths and voltage drop."],
+      mistakes:["Skipping the 'Statutory Load Declaration' step — waiting until the building is built to ask the utility for power. They may take 12 months to bring a feeder to your site!","Designing in 'silos' without talking to HVAC — the chiller uses 40-60% of building power; if you don't coordinate, your transformer will be the wrong size."],
+      interviewQs:["What are the four main stages of an engineering design project?","What is a GFC drawing and why is it called that?","How do you determine the initial power requirements for a building before any equipment is selected?"],
+      siteTips:["Keep a 'Site Instruction' book and a 'Drawing Register'. Never allow a contractor to build from a 'REV 0' drawing if 'REV 3' exists. The latest revision is the only revision that matters."],
+      diagram:{type:'schematic', svgId:'workflow-diagram'}
+    },
+    advanced:{
+      theory:"VALUE ENGINEERING (VE):\nA systematic method to improve the 'value' of goods or services by using an examination of function. \nValue = Function / Cost.\nVE in Electrical: Is there a cheaper way to achieve the same safety and reliability? (e.g., using Aluminum instead of Copper for large feeders, or optimized cable routing).\n\nBIM (BUILDING INFORMATION MODELING):\n3D design + coordination. Prevents physical clashes between cable trays, ducts, and pipes before site work begins.\nLOD (Level of Detail): LOD 300 (Schematic), LOD 400 (Construction), LOD 500 (As-Built).\n\nPROJECT RISK MANAGEMENT:\nIdentifying 'Single Points of Failure' (SPOF) in the power chain.\nN+1 Redundancy: One extra unit available (e.g. 3 transformers, but only 2 needed for peak load).\n2N Redundancy: Full mirror system (Data Centre standard).\n\nPROCUREMENT & CONTRACTS:\nLSTK (Lumpsum Turnkey): Fixed price for whole job.\nItem Rate (BOQ): Paid per unit of work (e.g., per meter of cable). Common in large industrial projects.",
+      formula:{
+        IS:'BOQ Variance: (Actual - Estimate) / Estimate × 100\nLife Cycle Cost: CAPEX + (Annual OPEX × Life) [NPV based]\nDiversity Factor (Macro): Between buildings in a complex',
+        NEC:'CSI MasterFormat: standard for US construction specifications\nLID (Low Impact Development) integration\nNEC 110.10: Circuit impedance and other characteristics',
+        IEC:'ISO 19650: BIM management standard\nIEC 60364-8-1: Functional aspects - energy efficiency\nTotal Cost of Ownership (TCO) calculation'
+      },
+      example:{
+        sector:'dc',
+        given:'Data Centre project. Compare N+1 vs 2N redundancy for a 1 MW load.',
+        steps:[
+          'N+1: Use 3 × 500 kW UPS units. Total 1.5 MW. One unit can fail and 1 MW is still supplied. Cost index 1.5x.',
+          '2N: Use 2 sets of 2 × 500 kW UPS (2 MW total). Full independent paths A and B. Cost index 2.0x.',
+          'Analysis: 2N handles a full bus failure; N+1 only handles a single unit failure.',
+          'Decision: Tier III Data Centres require N+1 with concurrent maintainability; Tier IV requires 2N.'
+        ],
+        result:'N+1 is efficient but vulnerable to bus outages. 2N is robust but 33% more expensive. Choice depends on the required Uptime Tier (99.982% vs 99.995%).'
+      },
+      rot:["Value Engineering Rule: Never substitute aluminum for copper in medical locations or for very small control cables — the fatigue and termination issues outweigh the cost savings. Save the aluminum for large main feeders."],
+      mistakes:["Not conducting a 'Clash Detection' in 3D/BIM — discovering that your 600mm cable tray hits the HVAC main duct in the middle of a corridor on site. Fixing it then costs 10× more than fixing it on the model.","Underestimating 'Statutory Approval' time in project schedules — CEA inspections and utility connections are often the longest lead time items."],
+      interviewQs:["What is the difference between N+1 and 2N redundancy?","How does Value Engineering differ from simple cost-cutting?","What is a 'Single Point of Failure' in an electrical design?"],
+      siteTips:["Conduct weekly 'Coordination Meetings' with HVAC, Fire, and Plumbing engineers. Most electrical site problems are actually coordination problems with other services."],
+      diagram:{type:'schematic', svgId:'adv-methodology-sld'}
+    },
+    sectorNotes:{res:'Simple concept → floor layout → DB schedule. Permit required from local municipal authority.',com:'Full DBR → Tender → GFC. Mechanical/Electrical/Plumbing (MEP) coordination is the biggest challenge. LEED certification often requested.',dc:'Uptime Tier certification drives the design. N+1 or 2N throughout. Energy efficiency (PUE) is a key KPI.',ind:'Process load dominates. Harmonic studies, motor starting simulations (ETAP), and robust cable routing in harsh environments.',og:'FEED (Front-End Engineering Design) stage is critical. HazOp (Hazard and Operability) studies. Massive documentation requirements.',hc:'Patient safety focus. Separation of essential/non-essential. Intensive coordination with medical gas and medical equipment vendors.'},
+    standards:{
+      IS:[{clause:'NBC 2016 Part 8',title:'General Planning & Design',note:'Mandatory building electrical planning allowances in India'},{clause:'IS 1646',title:'Fire safety of buildings (Electrical)',note:'Design requirements for life safety systems'}],
+      NEC:[{clause:'CSI MasterFormat Div 26',title:'Electrical Specifications',note:'Standard US structure for electrical project documents'},{clause:'NFPA 101',title:'Life Safety Code',note:'Egress lighting and emergency power planning'}],
+      IEC:[{clause:'ISO 19650',title:'BIM for lifecycle management',note:'International standard for digital design coordination'},{clause:'ISO 50001',title:'Energy Management',note:'Designing for operational energy efficiency'}]
+    },
     quiz:[]
   }
 

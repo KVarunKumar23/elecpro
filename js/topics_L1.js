@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    ElecPro — topics_L1.js
-   Level 1: Fundamentals — 12 topics COMPLETE
+   Level 1: Fundamentals — 14 topics COMPLETE
    ═══════════════════════════════════════════ */
 
 const TOPICS_L1 = [
@@ -934,6 +934,140 @@ const TOPICS_L1 = [
     calculator:null,
     sectorNotes:{},
     standards:{IS:[],NEC:[],IEC:[]},
+    quiz:[]
+  },
+  /* ── 13. PROFESIONAL GLOSSARY ── */
+  {
+    id:'elec-glossary', level:1, icon:'📖', title:'Professional Electrical Glossary',
+    desc:'A-Z of essential electrical engineering terms, definitions, and professional jargon.',
+    tags:['Glossary', 'Definitions', 'Terms', 'Jargon', 'Dictionary'],
+    sectors:['res','com','ind','dc','og','hc'], green:false, calculator:null,
+    beginner:{
+      intro:"Professional engineering has a language of its own. Misunderstanding a single term — like 'Ground' versus 'Neutral' — can lead to dangerous design errors. This glossary provides clearly defined terms used by engineers, contractors, and inspectors worldwide.",
+      whyMatters:[
+        {icon:'🗣️', text:'Precise terminology ensures clear communication between designers and contractors'},
+        {icon:'📓', text:'Knowing the official definitions helps in reading and interpreting codes (IS, NEC, IEC)'},
+        {icon:'🔍', text:'Many engineering failures start with a misunderstanding of a technical term or requirement'}
+      ],
+      theory:"[NEC]\nKEY TERMS (USA/NEC):\n— SERVICE ENTRANCE: The conductors and equipment for delivering energy from the utility to the building system.\n— MAIN BONDING JUMPER: The connection between the grounded circuit conductor and the equipment grounding conductor at the service.\n— FEEDER: All circuit conductors between the service equipment and the final branch-circuit overcurrent device.\n— BRANCH CIRCUIT: The circuit conductors between the final overcurrent device and the outlet(s).\n\n[IS/IEC]\nKEY TERMS (INDIA/IEC):\n— EARTHING CONDUCTOR: A protective conductor connecting the main earthing terminal to an earth electrode.\n— NEUTRAL: A conductor connected to the neutral point of a system and capable of contributing to the transmission of electrical energy.\n— CONSUMER UNIT: A distribution board for residential use, usually containing an isolator and MCBs.\n— ISOLATION: A function intended to cut off the supply for safety reasons by making it dead.\n\n[ALL]\nESSENTIAL DEFINITIONS:\n— AMPACITY: The maximum current, in amperes, that a conductor can carry continuously under the conditions of use without exceeding its temperature rating.\n— CONTINUOUS LOAD: A load where the maximum current is expected to continue for 3 hours or more.\n— DEAD FRONT: Without live parts exposed to a person on the operating side of the equipment.\n— VOLTAGE DROP: The loss of voltage caused by the flow of current through a conductor due to its internal resistance/impedance.",
+      formula:{
+        IS:'Terminologies as per IS 732 and IS 2026 (Transformers)',
+        NEC:'Definitions as per NEC Article 100 — Mandatory for compliance',
+        IEC:'Definitions as per IEC 60050 (International Electrotechnical Vocabulary)'
+      },
+      example:{
+        sector:'com',
+        given:'An electrician asks: "Is this a feeder or a branch circuit?" Why does it matter?',
+        steps:[
+          'Definition check: A Branch Circuit is AFTER the final overcurrent device (e.g., the MCB for a light).',
+          'A Feeder is BEFORE that MCB (e.g., the cable from the main panel to the floor DB).',
+          'Rule impact: NEC/IS have different sizing, grounding, and separation rules for Feeders vs Branch Circuits.'
+        ],
+        result:'Knowing the precise term (Feeder vs Branch Circuit) ensures the correct code section is applied during design and installation.'
+      },
+      rot:["Jargon Tip: In the UK/IEC/India, 'Earth' is used. In the USA, 'Ground' is used. They mean the same thing: a zero-potential connection to the planet.","Neutral vs Earth: Remember, Neutral carries current in normal operation. Earth (Ground) only carries current during a fault or leakage. Never swap them."],
+      mistakes:["Using 'Ground' and 'Neutral' interchangeably — they are connected at the service entrance but perform very different functions","Assuming 'Voltage' and 'Potential' are always different — voltage is simply the 'difference' in potential between two points"],
+      interviewQs:["What is the difference between a grounded conductor and a grounding conductor?","Define Ampacity in your own words.","What constitutes a 'Continuous Load' according to the NEC?"],
+      siteTips:["When giving instructions on site, use the official terms from the GFC (Good For Construction) drawings. Using vague terms like 'that main wire' instead of 'the main incoming feeder' leads to mistakes."],
+      diagram:{type:'schematic', svgId:'glossary-diagram'}
+    },
+    advanced:{
+      theory:"[ALL]\nADVANCED PROFESSIONAL TERMINOLOGY:\n\n— SINGLE POINT OF FAILURE (SPOF): Any part of a system that, if it fails, will stop the entire system from working. Good design minimizes SPOFs.\n— REDUNDANCY (N+1, 2N): Providing spare components so that if one fails, the system continues (used in Data Centres).\n— COORDINATION (SELECTIVITY): The process of ensuring that only the circuit breaker closest to a fault trips, leaving the rest of the building powered.\n— DISCRIMINATION: The ability of a protective device to distinguish between a temporary surge (like a motor start) and a real fault.\n— STEADY STATE: The condition of a system after all transients have died down.\n— TRANSIENT: A temporary, high-frequency voltage or current spike caused by lightning, switching, or motor starting.\n— UPS (UNINTERRUPTIBLE POWER SUPPLY): Equipment that provides near-instantaneous battery backup during a power failure.",
+      formula:{
+        IS:'IS 1885: Electrotechnical Vocabulary (Multi-part standard)',
+        NEC:'NEC Article 100: Covers terms specifically used in the Code',
+        IEC:'IEC 60050: The IEV (International Electrotechnical Vocabulary)'
+      },
+      example:{
+        sector:'ind',
+        given:'Design a "Redundant" power supply for a critical pump. Explain N+1.',
+        steps:[
+          'Step 1: The pump needs 100A.',
+          'Step 2: Install two 100A supply feeds (A and B).',
+          'Step 3: If feed A fails, feed B takes over. This is N+1 (one active, one spare for "N" load).',
+          'Result: The pump operation is protected against a single supply failure.'
+        ],
+        result:'N+1 Redundancy significantly increases system reliability for industrial processes.'
+      },
+      rot:["Design Tip: Always clarify with the client what they mean by 'Essential Load'. This terminology varies between hospitals, hotels, and data centres."],
+      mistakes:["Confusing 'Redundancy' with 'Backup' — Backup may involve a delay (like a generator), whereas Redundancy implies seamless continuity","Overlooking 'Standard Reference Conditions' when discussing ampacity — a cable's 100A rating is only valid at the standard temperature (usually 30°C or 40°C)."],
+      interviewQs:["Explain the difference between N+1 and 2N redundancy.","What is a transient voltage spike?","Define Discriminative Protection."],
+      siteTips:["Maintain a project-specific glossary for large, multi-national projects to ensure engineers from different standards backgrounds (IS vs NEC) are using the same language."],
+      diagram:{type:'schematic', svgId:'adv-glossary-sld'}
+    },
+    sectorNotes:{res:'Focus on: Consumer Unit, RCD, MCB, Loop Impedance.',com:'Focus on: MD, Tariff, Diversity, DB, Busbar.',dc:'Focus on: PUE, N+1, Tier Rating, Static Switch, BESS.',ind:'Focus on: MCC, VFD, Harmonic, THD, Isc.',og:'Focus on: FEED, HazOp, Ex, Intrinsically Safe.',hc:'Focus on: IT Earthing, Isolation Xfmr, Patient Safety.'},
+    standards:{
+      IS:[{clause:'IS 1885',title:'Electrotechnical Vocabulary',note:'The comprehensive Indian dictionary of electrical terms'}],
+      NEC:[{clause:'NEC Article 100',title:'Definitions',note:'Mandatory definitions for complying with the National Electrical Code'}],
+      IEC:[{clause:'IEC 60050',title:'International Electrotechnical Vocabulary (IEV)',note:'The global standard for electrical terminology'}]
+    },
+    quiz:[]
+  },
+
+  /* ── 14. SYMBOLS & ABBREVIATIONS ── */
+  {
+    id:'symbols-abbreviations', level:1, icon:'📐', title:'Symbols, Abbreviations & Standards',
+    desc:'How to read and draw electrical diagrams using standard symbols and international marks.',
+    tags:['Symbols', 'Abbreviations', 'Diagrams', 'Legend', 'Drawing Reading'],
+    sectors:['res','com','ind','dc','og','hc'], green:false, calculator:null,
+    beginner:{
+      intro:"Electrical engineering is a visual language. Symbols allow complex systems to be drawn on a single page that any engineer in the world can understand. Mastering these symbols is the first step to reading 'Single Line Diagrams' (SLDs) and 'Schematics'.",
+      whyMatters:[
+        {icon:'📐', text:'Symbols are the alphabet of engineering drawings; you cannot read a drawing without them'},
+        {icon:'🌍', text:'Standard symbols (IEC/ANSI) allow your designs to be understood internationally'},
+        {icon:'📋', text:'A clear drawing legend prevents installation errors caused by misinterpreting symbols'}
+      ],
+      theory:"[ALL]\nCOMMON SYMBOLS & ABBREVIATIONS:\n\n— ACB: Air Circuit Breaker\n— MCCB: Molded Case Circuit Breaker\n— DB / VDB: Distribution Board / Vertical Distribution Board\n— SLD: Single Line Diagram\n— CU: Copper (Conductor)\n— AL: Aluminum (Conductor)\n— PF: Power Factor\n— CT: Current Transformer\n— PT: Potential Transformer\n\n[IS/IEC]\nCOMMON DRAWING SYMBOLS (IEC 60617):\n— Switch: A simple line with a break.\n— Breaker (MCB/MCCB): A box with 'X' or specific line mark.\n— Transformer: Two overlapping circles (or zig-zag lines).\n— Earth: Three horizontal lines of decreasing length.\n— Capacitor: Two parallel lines.\n\n[NEC/ANSI]\nCOMMON DRAWING SYMBOLS (ANSI/IEEE):\n— Transformer: Two coils (standard coil symbol).\n— Resistor: Zig-zag line.\n— Ground: Fork-style or line-style symbol.\n— Breaker: Half-circle or 'box' style symbol.\n\nINDUSTRY MARKS:\n— ISI (India): Indian Standards Institute certification.\n— UL (USA): Underwriters Laboratories (safety testing).\n— CE (Europe): Conformité Européenne (health, safety, and environmental protection).",
+      formula:{
+        IS:'Symbols as per IS 12032 and NBC 2016',
+        NEC:'Symbols as per ANSI/IEEE Standard 315',
+        IEC:'Symbols as per IEC 60617 (Graphical Symbols for Diagrams)'
+      },
+      example:{
+        sector:'res',
+        given:'Look at a residential floor plan. You see a circle with two lines. What is it?',
+        steps:[
+          'Symbol Type: Circle with two cross-lines = Ceiling Fan (Typical IS/IEC).',
+          'A circle with a cross = Downlight or Point Light.',
+          'A rectangle with "DB" = Distribution Board location.'
+        ],
+        result:'Identifying symbols correctly ensures the electrician installs the equipment in the right location.'
+      },
+      rot:["Legend Rule: Every single drawing MUST have a legend. Never assume 'everyone knows what this symbol means'. Even standard symbols can vary between companies.","Scale Rule: Standard symbols should be a consistent size across the whole drawing set. Too small = unreadable; too large = cluttered."],
+      mistakes:["Mixing ANSI and IEC symbols on the same drawing — creates confusion and a non-professional appearance","Using deprecated symbols (like the old zig-zag for resistors in modern IEC designs)"],
+      interviewQs:["What is the difference between an SLD and a Schematic?","What does the 'CE' mark on a piece of equipment indicate?","Name the international standard for graphical symbols on electrical diagrams."],
+      siteTips:["Always carry a printed copy of the drawing 'Legend' in your site folder. If you find a symbol on site that isn't in your legend, ask for clarification immediately."],
+      diagram:{type:'schematic', svgId:'symbols-table'}
+    },
+    advanced:{
+      theory:"[ALL]\nADVANCED SYSTEM ABBREVIATIONS & MARKS:\n\n— VFD / VSD: Variable Frequency Drive / Variable Speed Drive\n— ATS: Automatic Transfer Switch\n— AMF: Automatic Mains Failure (Generator controller)\n— PDU: Power Distribution Unit (Data Centre)\n— SCADA: Supervisory Control and Data Acquisition\n— PLC: Programmable Logic Controller\n— BMS: Building Management System\n\nLOGIC SYMBOLS (Digital/Control):\n— AND, OR, NOT gates used in relay logic diagrams.\n— NC (Normally Closed) vs NO (Normally Open) contacts.\n\nCERTIFICATION MARKS IN DETAIL:\n— BIS (Bureau of Indian Standards): Mandatory for many electrical products in India.\n— NEMA (National Electrical Manufacturers Association): US enclosure and motor standards.\n— IP (Ingress Protection): e.g., IP65 (dust-tight, water-jet protected).",
+      formula:{
+        IS:'BIS marking requirements for switchgear and cables',
+        NEC:'UL listing and NEMA classification standards',
+        IEC:'IP Rating code (IEC 60529)'
+      },
+      example:{
+        sector:'ind',
+        given: 'An industrial pump control drawing shows "NO" and "NC" contacts. How do they work?',
+        steps:[
+          'NO (Normally Open): The circuit is open when the relay is off. When you turn on the pump, the contact CLOSES.',
+          'NC (Normally Closed): The circuit is closed when the relay is off. Used for E-Stops and safety interlocks (open on trip).',
+          'Logic: Pump runs only when NO is closed AND NO safety fault exists on NC path.'
+        ],
+        result:'Correct understanding of NO/NC logic symbols is critical for industrial control and safety wiring.'
+      },
+      rot:["NEMA vs IP: Remember, NEMA 3R/4 is roughly equivalent but not identical to IP ratings. Use the official conversion tables if substituting equipment."],
+      mistakes:["Using the 'Ground' symbol where 'Neutral' should be — they are not the same electrically for the circuit logic","Assuming a product is 'Safe' just because it has a CE mark — CE is a self-declaration; UL/ISI are verified certifications."],
+      interviewQs:["What is the difference between a Normally Open (NO) and Normally Closed (NC) contact?","What is an IP65 enclosure rating?","What does LOTO stand for and what is its symbol?"],
+      siteTips:["Check nameplates for certification marks (UL, ISI, CE) before installation. Installing uncertified equipment in a formal project can void your insurance and professional liability."],
+      diagram:{type:'schematic', svgId:'adv-symbols-sld'}
+    },
+    sectorNotes:{res:'Focus: light points, sockets, fan, DB, earth pit.',com:'Focus: AHU, Chiller, Lift, ATS, MDB, Busduct.',dc:'Focus: PDU, UPS, Battery, Rack, Fiber, Cooling.',ind:'Focus: MCC, VFD, Motor, PLC, SCADA, Harmonic Filter.',og:'Focus: ESD, F&G, Junction Box, Cable Gland, Ex-rating.',hc:'Focus: Isolation Xfmr, Medical Gas, Nurse Call, UPS.'},
+    standards:{
+      IS:[{clause:'IS 12032',title:'Graphical symbols for electrotechnology',note:'Standard Indian electrical symbols'},{clause:'IS 1554',title:'Cables — marking and symbols',note:'How cables are identified in India'}],
+      NEC:[{clause:'ANSI/IEEE 315',title:'Graphic symbols for electrical diagrams',note:'The primary US standard for electrical symbols'},{clause:'NEMA 250',title:'Enclosures for electrical equipment',note:'NEMA rating system for panels'}],
+      IEC:[{clause:'IEC 60617',title:'Graphical symbols for diagrams',note:'International standard used in most of the world'},{clause:'IEC 60529',title:'Degrees of protection (IP Code)',note:'The global standard for enclosure ingress protection'}]
+    },
     quiz:[]
   }
 ];
