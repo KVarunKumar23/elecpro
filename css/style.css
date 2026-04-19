@@ -416,16 +416,128 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 .mt-8{margin-top:8px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}.mt-32{margin-top:32px}
 .mb-8{margin-bottom:8px}.mb-16{margin-bottom:16px}.mb-24{margin-bottom:24px}
 
-/* Responsive */
+/* ═══════════════════════════════════════
+   RESPONSIVE — MOBILE-FIRST OVERHAUL
+   ═══════════════════════════════════════ */
+
+/* ── Tablet & below (≤900px) ── */
 @media(max-width:900px){
   #sidebar{transform:translateX(-100%)}
   #sidebar.mob-open{transform:translateX(0);box-shadow:var(--shadow)}
-  #main{margin-left:0!important;padding:18px 16px}
+  #main{margin-left:0!important;padding:18px 14px;padding-bottom:80px}
   .mod-tabs{display:none}
   .hero-h1{font-size:2rem}
+
+  /* Topbar: collapse search to icon */
+  .search-wrap{flex:0 0 auto;max-width:none;width:auto}
+  .search-input{width:36px;padding:7px 8px 7px 30px;background:transparent;border-color:transparent;cursor:pointer;transition:width .25s ease,background .2s,border-color .2s,padding .2s}
+  .search-input::placeholder{color:transparent}
+  .search-input:focus{width:clamp(160px,45vw,280px);padding:7px 12px 7px 32px;background:var(--bg3);border-color:var(--accent);cursor:text;position:absolute;right:48px;z-index:10}
+  .search-input:focus::placeholder{color:var(--text3)}
+
+  /* Standard switcher: larger touch targets */
+  .std-btn{padding:6px 11px;font-size:.72rem}
+
+  /* ── Topic page: STACK 2-col to 1-col ── */
+  .topic-2col{grid-template-columns:1fr!important}
+  .topic-sidebar{width:100%!important}
+
+  /* ── Sector differences: stack ── */
+  .sector-diff-grid{grid-template-columns:1fr!important}
+
+  /* ── Mistakes: stack pitfall/remedy ── */
+  .mistake-inner{flex-direction:column!important;gap:12px!important}
+  .mistake-inner > div{flex:none!important;width:100%!important}
+
+  /* ── Practice: stack input row ── */
+  .practice-input-row{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+  .practice-input-row input{width:100%!important}
+  .practice-input-row .btn{width:100%!important;text-align:center}
+
+  /* ── Why-matters cards: full width ── */
+  .why-card{min-width:100%!important;flex:none!important}
+
+  /* ── Page header: stack title + pill ── */
+  .page-hdr{flex-direction:column;align-items:flex-start!important;gap:10px}
+  .page-title{font-size:1.6rem}
+
+  /* ── Hero actions: stack buttons ── */
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%;text-align:center}
+
+  /* ── Stats row: 2-column on mobile ── */
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+
+  /* ── Card grids: fewer columns ── */
+  .sector-grid{grid-template-columns:1fr}
+  .path-grid{grid-template-columns:1fr}
+
+  /* ── Quiz filters: stack ── */
+  .quiz-filters{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+  .quiz-filters select{width:100%!important}
+  .quiz-filters label{margin-bottom:-2px}
+
+  /* ── Quick actions: horizontal scroll ── */
+  .quick-actions{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .quick-actions button{white-space:nowrap;flex-shrink:0}
+
+  /* Footer */
+  #global-footer{padding:18px 14px!important;font-size:.78rem!important;margin-bottom:0!important}
+
+  /* Difficulty tab tags: wrap under buttons */
+  .diff-tabs{flex-wrap:wrap}
+  .diff-tabs span[style*="flex:1"]{display:none!important}
+
+  /* Topic view tabs: compact */
+  .topic-view-tabs button{padding:8px 12px!important;font-size:.8rem!important}
 }
-@media(max-width:600px){
-  .stats-row{grid-template-columns:repeat(3,1fr)}
+
+/* ── Mobile Bottom Nav Bar (≤900px) ── */
+@media(max-width:900px){
+  .mob-bottom-nav{
+    position:fixed;bottom:0;left:0;right:0;
+    height:60px;background:var(--bg2);
+    border-top:1px solid var(--border);
+    display:flex!important;align-items:center;justify-content:space-around;
+    z-index:200;padding:4px 0 env(safe-area-inset-bottom,6px);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .mob-nav-btn{
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    background:none;border:none;color:var(--text3);
+    font-family:var(--font-mono);font-size:.58rem;letter-spacing:.04em;
+    cursor:pointer;padding:4px 8px;border-radius:6px;transition:all var(--trans);
+    min-width:52px;
+  }
+  .mob-nav-btn .mob-nav-icon{font-size:1.15rem}
+  .mob-nav-btn.active{color:var(--accent)}
+  .mob-nav-btn:active{background:var(--bg3)}
+}
+@media(min-width:901px){
+  .mob-bottom-nav{display:none!important}
+}
+
+/* ── Small phones (≤480px) ── */
+@media(max-width:480px){
+  .card-grid{grid-template-columns:1fr}
+  .special-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-h1{font-size:1.7rem!important}
+  .hero-p{font-size:.85rem}
+  .page-title{font-size:1.45rem}
+  .start-card h2{font-size:1.35rem}
+  .std-switch{display:none}
+  #topbar{gap:6px;padding:0 10px}
+  .logo{font-size:1.25rem}
+  .logo-bolt{width:24px;height:24px;font-size:.8rem}
+  .topbar-sep{display:none}
+}
+
+/* ── Very small phones (≤360px) ── */
+@media(max-width:360px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .special-grid{grid-template-columns:1fr}
+  #main{padding:14px 10px;padding-bottom:80px}
+  .stat-val{font-size:1.5rem!important}
 }
 
 /* ── PRODUCTION UPGRADES ── */

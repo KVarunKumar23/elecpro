@@ -228,6 +228,12 @@ function navigateTo(page, extra = null, push = true) {
   document.querySelectorAll('.nav-item').forEach(n =>
     n.classList.toggle('active', n.dataset.page === page));
 
+  // Sync mobile bottom nav active state
+  const mobNavMap = { home:'home', learn:'learn', topic:'learn', quiz:'quiz', calc:'calc', practice:'more', ref:'more', projects:'more', mistakes:'more' };
+  const mobActive = mobNavMap[page] || 'home';
+  document.querySelectorAll('.mob-nav-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.page === mobActive));
+
   const target = document.getElementById('page-' + page);
   if (target) target.classList.add('active');
 
@@ -598,7 +604,7 @@ function renderTopic(id) {
     </div>
 
     <!-- Difficulty tabs -->
-    <div style="display:flex;gap:8px;margin-bottom:20px">
+    <div class="diff-tabs" style="display:flex;gap:8px;margin-bottom:20px">
       <button id="tab-beg" class="btn btn-primary btn-sm" onclick="setDiffTab('beg')">Beginner</button>
       <button id="tab-adv" class="btn btn-outline btn-sm" onclick="setDiffTab('adv')">Advanced</button>
       <span style="flex:1"></span>
@@ -679,9 +685,9 @@ function topicContentPlaceholder(t, mode, std) {
 
   // ── Why this matters ──
   const whyHtml = data.whyMatters?.length ? `
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px" class="why-matters-row">
       ${data.whyMatters.map(w => `
-        <div style="flex:1;min-width:160px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;display:flex;align-items:flex-start;gap:8px">
+        <div class="why-card" style="flex:1;min-width:160px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;display:flex;align-items:flex-start;gap:8px">
           <span style="font-size:1.1rem">${w.icon}</span>
           <span style="font-size:.79rem;color:var(--text2);line-height:1.45">${w.text}</span>
         </div>`).join('')}
@@ -721,7 +727,7 @@ function topicContentPlaceholder(t, mode, std) {
   const topicQuiz = (window.QUIZ_BANK || []).filter(q => q.topicId === t.id);
 
   let finalHtml = `
-    <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start">
+    <div class="topic-2col" style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start">
 
       <!-- Main content -->
       <div>
@@ -730,7 +736,7 @@ function topicContentPlaceholder(t, mode, std) {
         </div>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px">
           <!-- Theory | Diagram | Cheat Sheet tabs -->
-          <div style="display:flex;border-bottom:1px solid var(--border);background:var(--bg3);flex-wrap:wrap">
+          <div class="topic-view-tabs" style="display:flex;border-bottom:1px solid var(--border);background:var(--bg3);flex-wrap:wrap">
             <button onclick="setViewTab('theory','${mode}')" id="vtab-theory-${mode === 'advanced' ? 'adv' : 'beg'}"
               style="font-family:var(--font-head);font-size:.88rem;font-weight:600;padding:10px 18px;border:none;background:var(--bg2);color:var(--accent);cursor:pointer;border-bottom:2px solid var(--accent)">
               Theory
@@ -774,7 +780,7 @@ function topicContentPlaceholder(t, mode, std) {
           <div style="padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);font-family:var(--font-head);font-weight:600;font-size:.9rem;color:var(--text)">
             🏭 How this differs by sector
           </div>
-          <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="sector-diff-grid" style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
             ${Object.entries(t.sectorNotes).filter(([,v])=>v).map(([k,v]) => `
               <div style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius)">
                 <div style="font-family:var(--font-mono);font-size:.65rem;margin-bottom:4px">
@@ -787,7 +793,7 @@ function topicContentPlaceholder(t, mode, std) {
       </div>
 
       <!-- Right sidebar -->
-      <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="topic-sidebar" style="display:flex;flex-direction:column;gap:14px">
 
         <!-- Standards -->
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px">
@@ -1071,7 +1077,7 @@ function renderQuiz() {
     </div>
 
     <!-- Filters -->
-    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;">
+    <div class="quiz-filters" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;">
       <label style="font-size:.85rem;color:var(--text2);font-weight:600;">Filter:</label>
       <select id="quiz-filter-level" onchange="applyQuizFilters()" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:.85rem;">
         <option value="all">All Levels</option>
@@ -1340,7 +1346,7 @@ window.generatePracticeChallenge = function() {
       <div style="font-family:var(--font-mono); color:var(--primary); font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px;">Challenge: ${type.calc}</div>
       <h3 style="margin-top:0; color:var(--text); font-size:1.2rem; line-height:1.5;">${window.currentChallenge.question}</h3>
       
-      <div style="margin-top:20px; display:flex; gap:10px; align-items:center;">
+      <div class="practice-input-row" style="margin-top:20px; display:flex; gap:10px; align-items:center;">
         <input type="number" id="practice-input" placeholder="Enter your answer" class="input" style="width:200px;" step="any">
         <span style="color:var(--text2); font-weight:600;">${window.currentChallenge.unit}</span>
         <button class="btn btn-primary" onclick="checkPracticeAnswer()">Submit Answer</button>
@@ -1490,7 +1496,7 @@ function renderMistakes() {
         <span style="font-size:0.75rem; color:var(--red); font-family:var(--font-mono); font-weight:bold;">${m.severity.toUpperCase()}</span>
       </div>
       <h3 style="margin-top:0; margin-bottom:12px; color:var(--text); font-size:1.25rem;">${m.title}</h3>
-      <div style="display:flex; gap:20px; border-top:1px solid var(--border); padding-top:16px;">
+      <div class="mistake-inner" style="display:flex; gap:20px; border-top:1px solid var(--border); padding-top:16px;">
         <div style="flex:1;">
           <h4 style="margin:0 0 8px 0; color:var(--red); font-size:0.9rem;">The Pitfall ❌</h4>
           <div style="color:var(--text2); font-size:0.95rem; line-height:1.5;">${m.pitfall}</div>

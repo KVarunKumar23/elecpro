@@ -8,8 +8,8 @@
   <meta name="description" content="A comprehensive electrical engineering learning portal covering 58 topics, 14 calculators, and 1000+ quiz questions aligned to IS, NEC, and IEC standards.">
   <meta property="og:title" content="ElecPro — Electrical Engineering Learning Portal">
   <meta property="og:description" content="A comprehensive electrical engineering learning portal by K Varun Kumar.">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/effects.css">
+  <link rel="stylesheet" href="css/style.css?v=3.3">
+  <link rel="stylesheet" href="css/effects.css?v=3.3">
 </head>
 <body>
 <!-- ══════════════════════════════════════
@@ -128,6 +128,27 @@
   </div>
 
 </main>
+
+<!-- ══════════════════════════════════════
+     MOBILE BOTTOM NAV (visible ≤900px only)
+     ══════════════════════════════════════ -->
+<nav class="mob-bottom-nav" id="mob-bottom-nav" aria-label="Mobile navigation">
+  <button class="mob-nav-btn active" data-page="home" onclick="navigateTo('home')">
+    <span class="mob-nav-icon">🏠</span>Home
+  </button>
+  <button class="mob-nav-btn" data-page="learn" onclick="navigateTo('learn')">
+    <span class="mob-nav-icon">📚</span>Learn
+  </button>
+  <button class="mob-nav-btn" data-page="quiz" onclick="navigateTo('quiz')">
+    <span class="mob-nav-icon">❓</span>Quiz
+  </button>
+  <button class="mob-nav-btn" data-page="calc" onclick="navigateTo('calc')">
+    <span class="mob-nav-icon">🧮</span>Calc
+  </button>
+  <button class="mob-nav-btn" data-page="more" onclick="toggleSidebar()">
+    <span class="mob-nav-icon">☰</span>More
+  </button>
+</nav>
 
 <!-- ══════════════════════════════════════
      GLOBAL FOOTER
